@@ -3,6 +3,7 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
+use common\models\User;
 
 /**
  * Login form
@@ -28,6 +29,12 @@ class LoginForm extends Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            //自定义用户名验证方法
+            ['username','validateUsername'],
+            //用正则验证用户名和密码
+            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法'],
+            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法'],
+
         ];
     }
 
@@ -42,12 +49,25 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if (!$user->validatePassword($this->password)) {
+                $this->addError($attribute, 'Incorrect password.');
             }
         }
     }
-
+    /*
+     * 验证用户名
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     * */
+    public function validateUsername($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if (!$user) {
+                $this->addError($attribute, 'Incorrect username.');
+            }
+        }
+    }
     /**
      * Logs in a user using the provided username and password.
      *
@@ -72,7 +92,12 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
-
+        if($this->_user === null){
+            $this->_user = User::findByEmail($this->username);
+        }
+        if($this->_user === null){
+            $this->_user = User::findByMobile($this->username);
+        }
         return $this->_user;
     }
 }

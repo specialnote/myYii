@@ -1,29 +1,27 @@
 <?php
-
 namespace common\models;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\web\NotFoundHttpException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
- * This is the model class for table "{{%user}}".
+ * User model
  *
  * @property integer $id
  * @property string $username
- * @property string $auth_key
- * @property string $password
+ * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
- * @property integer $changed_password
- * @property string $last_login_time
+ * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property integer $group
- * @property integer $mobile
+ * @property string $password write-only password
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -31,7 +29,6 @@ class User extends \yii\db\ActiveRecord
     const GROUP_READER = 10;
     const GROUP_WRITER = 20;
     const GROUP_ADMIN  = 30;
-
     /**
      * @inheritdoc
      */
@@ -39,6 +36,7 @@ class User extends \yii\db\ActiveRecord
     {
         return '{{%user}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -48,65 +46,17 @@ class User extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password', 'email', 'created_at', 'updated_at'], 'required'],
-
-            [['changed_password', 'status', 'created_at', 'updated_at', 'group', 'mobile'], 'integer'],
-            [['last_login_time'], 'safe'],
-            [['username', 'password', 'password_reset_token'], 'string', 'max' => 255],
-            [['auth_key', 'email'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
-
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['group', 'default', 'value' => self::GROUP_READER],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['group', 'in', 'range' => [self::GROUP_READER, self::GROUP_WRITER,self::GROUP_ADMIN]],
-
-            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法'],
-            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法'],
-            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'手机号不合法'],
-            ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法'],
-
-
-        ];
-    }
-
-    /*
-     *自定义场景
-     * */
-    public function scenarios()
-    {
-        return [
-            'login' => ['username', 'password'],
-            'register' => ['username', 'email', 'password','mobile'],
-        ];
-    }
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'auth_key' => 'Auth Key',
-            'password' => 'Password',
-            'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
-            'changed_password' => 'Changed Password',
-            'last_login_time' => 'Last Login Time',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'group' => 'Group',
-            'mobile' => 'Mobile',
         ];
     }
 
@@ -123,7 +73,7 @@ class User extends \yii\db\ActiveRecord
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotFoundHttpException('"findIdentityByAccessToken" is not implemented.');
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -135,23 +85,6 @@ class User extends \yii\db\ActiveRecord
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
-    }
-
-    /*
-     * 根据邮箱查找用户
-     * @param string $email
-     * @return static|null
-     * */
-    public static function findByEmail($email){
-        return static::findOne(['email'=>$email,'status'=>self::STATUS_ACTIVE]);
-    }
-    /*
-     * 根据邮箱查找用户
-     * @param string $mobile
-     * @return static|null
-     * */
-    public static function findByMobile($mobile){
-        return static::findOne(['email'=>$mobile,'status'=>self::STATUS_ACTIVE]);
     }
 
     /**
@@ -231,7 +164,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function setPassword($password)
     {
-        $this->password = Yii::$app->security->generatePasswordHash($password);
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
