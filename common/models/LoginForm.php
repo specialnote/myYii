@@ -28,12 +28,9 @@ class LoginForm extends Model
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
-            //×Ô¶¨ÒåÓÃ»§ÃûÑéÖ¤·½·¨
-            ['username','validateUsername'],
-            //ÓÃÕıÔòÑéÖ¤ÓÃ»§ÃûºÍÃÜÂë
-            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'ÓÃ»§Ãû²»ºÏ·¨'],
-            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'ÃÜÂë²»ºÏ·¨'],
+            ['password', 'validatePassword','params'=>Yii::$app->params['regex.password']],
+            //éªŒè¯ç”¨æˆ·å
+            ['username','validateUsername','params'=>Yii::$app->params['regex.username']],
 
         ];
     }
@@ -48,24 +45,35 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect password.');
+            if(preg_match($params,$this->password)){
+
+                $user = $this->getUser();
+                if (!$user->validatePassword($this->password)) {
+                    $this->addError($attribute, 'Incorrect password.');
+                }
+            }else{
+                $this->addError($attribute,'å¯†ç ä¸åˆæ³•');
             }
+
         }
     }
     /*
-     * ÑéÖ¤ÓÃ»§Ãû
+     * éªŒè¯ç”¨æˆ·å
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      * */
     public function validateUsername($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user) {
-                $this->addError($attribute, 'Incorrect username.');
+            if(preg_match($params,$this->username)){
+                $user = $this->getUser();
+                if (!$user) {
+                    $this->addError($attribute, 'Incorrect username.');
+                }
+            }else{
+                $this->addError($attribute, 'ç”¨æˆ·åä¸åˆæ³•');
             }
+
         }
     }
     /**

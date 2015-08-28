@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -23,7 +24,7 @@ use yii\web\NotFoundHttpException;
  * @property integer $group
  * @property integer $mobile
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord  implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -69,17 +70,17 @@ class User extends \yii\db\ActiveRecord
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['group', 'in', 'range' => [self::GROUP_READER, self::GROUP_WRITER,self::GROUP_ADMIN]],
 
-            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'ÓÃ»§Ãû²»ºÏ·¨'],
-            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'ÃÜÂë²»ºÏ·¨'],
-            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'ÊÖ»úºÅ²»ºÏ·¨'],
-            ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'ÓÊÏä²»ºÏ·¨'],
+            ['username', 'match', 'pattern' => Yii::$app->params['regex.username']],
+            ['password','match','pattern'=>Yii::$app->params['regex.password']],
+            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile']],
+            ['email','match','pattern'=>Yii::$app->params['regex.email']],
 
 
         ];
     }
 
     /*
-     *×Ô¶¨Òå³¡¾°
+     *ï¿½Ô¶ï¿½ï¿½å³¡ï¿½ï¿½
      * */
     public function scenarios()
     {
@@ -138,7 +139,7 @@ class User extends \yii\db\ActiveRecord
     }
 
     /*
-     * ¸ù¾ÝÓÊÏä²éÕÒÓÃ»§
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
      * @param string $email
      * @return static|null
      * */
@@ -146,7 +147,7 @@ class User extends \yii\db\ActiveRecord
         return static::findOne(['email'=>$email,'status'=>self::STATUS_ACTIVE]);
     }
     /*
-     * ¸ù¾ÝÓÊÏä²éÕÒÓÃ»§
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
      * @param string $mobile
      * @return static|null
      * */
@@ -221,7 +222,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     /**
