@@ -26,6 +26,8 @@ use yii\web\NotFoundHttpException;
  */
 class User extends \yii\db\ActiveRecord  implements IdentityInterface
 {
+    public $verifyCode;//验证码
+
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
@@ -55,7 +57,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password', 'email', 'created_at', 'updated_at'], 'required'],
+            [['username', 'mobile', 'email', 'created_at', 'updated_at'], 'required'],
 
             [['changed_password', 'status', 'created_at', 'updated_at', 'group', 'mobile'], 'integer'],
             [['last_login_time'], 'safe'],
@@ -75,18 +77,20 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             ['mobile','match','pattern'=>Yii::$app->params['regex.mobile']],
             ['email','match','pattern'=>Yii::$app->params['regex.email']],
 
+            ['verifyCode', 'captcha','message'=>'验证码不正确'],
 
         ];
     }
 
     /*
-     *�Զ��峡��
+     *自定义场景
      * */
     public function scenarios()
     {
         return [
             'login' => ['username', 'password'],
             'register' => ['username', 'email', 'password','mobile'],
+            'change_username'=>['username','verifyCode'],
         ];
     }
     /**
@@ -96,7 +100,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
+            'username' => '用户名',
             'auth_key' => 'Auth Key',
             'password' => 'Password',
             'password_reset_token' => 'Password Reset Token',
@@ -108,8 +112,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'updated_at' => 'Updated At',
             'group' => 'Group',
             'mobile' => 'Mobile',
+            'verifyCode'=>'验证码',
         ];
     }
+
 
     /**
      * @inheritdoc
@@ -139,7 +145,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     }
 
     /*
-     * ������������û�
+     * find user by email
      * @param string $email
      * @return static|null
      * */
@@ -147,7 +153,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         return static::findOne(['email'=>$email,'status'=>self::STATUS_ACTIVE]);
     }
     /*
-     * ������������û�
+     * find user by mobile
      * @param string $mobile
      * @return static|null
      * */

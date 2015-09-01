@@ -13,6 +13,8 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
+    public $verifyCode;//验证码
+
 
     private $_user;
 
@@ -31,9 +33,24 @@ class LoginForm extends Model
             ['password', 'validatePassword','params'=>Yii::$app->params['regex.password']],
             //验证用户名
             ['username','validateUsername','params'=>Yii::$app->params['regex.username']],
-
+            //验证码
+            ['verifyCode', 'captcha'],
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'username' => '用户',
+            'password' => '密码',
+            'verifyCode'=>'验证码',
+            'rememberMe'=>'记住我',
+        ];
+    }
+
 
     /**
      * Validates the password.
@@ -46,13 +63,12 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             if(preg_match($params,$this->password)){
-
                 $user = $this->getUser();
                 if (!$user->validatePassword($this->password)) {
                     $this->addError($attribute, 'Incorrect password.');
                 }
             }else{
-                $this->addError($attribute,'密码不合法');
+                $this->addError($attribute,'Incorrect password.');
             }
 
         }
@@ -71,7 +87,7 @@ class LoginForm extends Model
                     $this->addError($attribute, 'Incorrect username.');
                 }
             }else{
-                $this->addError($attribute, '用户名不合法');
+                $this->addError($attribute, 'Incorrect username.');
             }
 
         }

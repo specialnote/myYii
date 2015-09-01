@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'My Yii',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -46,6 +46,14 @@ AppAsset::register($this);
             'linkOptions' => ['data-method' => 'post']
         ];
     }
+    $leftItems[] = ['label'=>'我的账户','items'=>[
+        ['label'=>'个人中心','url'=>'/user/index'],
+        ['label'=>'个人设置','url'=>'/user/change'],
+    ]];
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-left'],
+        'items' => $leftItems,
+    ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
