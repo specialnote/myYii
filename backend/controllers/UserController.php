@@ -2,7 +2,7 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\LoginForm;
+use yii\base\Exception;
 
 /**
  * Site controller
@@ -37,6 +37,7 @@ class UserController extends BaseController
         $act = Yii::$app->request->get('act');
         $act = $act?$act:'username';
         $model = Yii::$app->user->identity;
+        //设置场景
         switch($act){
             case 'username':
                 $model->setScenario('change_username');
@@ -46,14 +47,49 @@ class UserController extends BaseController
             case 'email':
                 break;
             case 'password':
+                $model->setScenario('change_password');
                 break;
             case 'face':
                 break;
             default:
                 break;
         }
-        if($model->load(Yii::$app->request->post()) && $model->save()){
-            return $this->goBack();
+        $change = Yii::$app->request->post('change');
+        if($change){
+            switch($change) {
+                case 'username':
+                    if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                        return $this->goBack();
+                    } else {
+                        throw new Exception('用户名修改失败');
+                    }
+                    break;
+                case 'password':
+                    $form = Yii::$app->request->post('User');
+                    if(!$model->validate('verifyCode')){
+                        echo '验证码不正确';
+                        die;
+                    }
+                    if (Yii::$app->security->validatePassword($form['password'], $model->password)) {
+                        if ($form['pass1'] === $form['pass2']) {
+                            $model->password = Yii::$app->security->generatePasswordHash($form['pass1']);
+                            if ($model->save()) {
+                                return $this->goBack();
+                            } else {
+                                echo '<pre>';
+                                var_dump($_POST);
+                                //throw new Exception('密码修改失败');
+                            }
+                        } else {
+                            throw new Exception('确认密码和新密码不一样');
+                        }
+                    } else {
+                        throw new Exception('原密码不正确');
+                    }
+                    break;
+                default:
+                    break;
+            }
         }else{
             return $this->render('change',[
                 'act'=>$act,

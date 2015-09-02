@@ -27,6 +27,8 @@ use yii\web\NotFoundHttpException;
 class User extends \yii\db\ActiveRecord  implements IdentityInterface
 {
     public $verifyCode;//验证码
+    public $pass1; //新密码
+    public $pass2; //确认密码
 
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -58,27 +60,27 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         return [
             [['username', 'mobile', 'email', 'created_at', 'updated_at'], 'required'],
-
             [['changed_password', 'status', 'created_at', 'updated_at', 'group', 'mobile'], 'integer'],
             [['last_login_time'], 'safe'],
-            [['username', 'password', 'password_reset_token'], 'string', 'max' => 255],
+            [['password_reset_token'], 'unique'],
             [['auth_key', 'email'], 'string', 'max' => 32],
+            [['username', 'password', 'password_reset_token'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
-
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['group', 'default', 'value' => self::GROUP_READER],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['group', 'in', 'range' => [self::GROUP_READER, self::GROUP_WRITER,self::GROUP_ADMIN]],
 
-            ['username', 'match', 'pattern' => Yii::$app->params['regex.username']],
-            ['password','match','pattern'=>Yii::$app->params['regex.password']],
-            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile']],
-            ['email','match','pattern'=>Yii::$app->params['regex.email']],
+            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法','on'=>['change_username','login','register']],
+            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法','on'=>['login','register','change_password']],
+            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'手机不合法','on'=>['change_mobile','login','register']],
+            ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法','on'=>['change_email','login','register']],
 
-            ['verifyCode', 'captcha','message'=>'验证码不正确'],
-
+            ['verifyCode', 'captcha','message'=>'验证码不正确','on'=>['login','register','change_username','change_password','change_email','change_mobile']],
+            ['pass1','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'新密码不合法','on'=>['change_password']],
+            ['pass2','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'确认密码不合法','on'=>['change_password']],
+            ['pass2','compare','compareAttribute'=>'pass1','operator'=>'===','message'=>'确认密码和新密码不一样','on'=>['change_password']],
         ];
     }
 
@@ -91,8 +93,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'login' => ['username', 'password'],
             'register' => ['username', 'email', 'password','mobile'],
             'change_username'=>['username','verifyCode'],
+            'change_password'=>['password','pass1','pass2','verifyCode'],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -102,7 +106,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'id' => 'ID',
             'username' => '用户名',
             'auth_key' => 'Auth Key',
-            'password' => 'Password',
+            'password' => '密 码',
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
             'changed_password' => 'Changed Password',
@@ -113,6 +117,8 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'group' => 'Group',
             'mobile' => 'Mobile',
             'verifyCode'=>'验证码',
+            'pass1'=>'新密码',
+            'pass2'=>'确认密码',
         ];
     }
 

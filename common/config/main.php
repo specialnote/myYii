@@ -19,5 +19,8 @@ return [
             'thousandSeparator' => ',',
             'currencyCode' => '&yen;',
         ],
+        'session' => [
+            'class' => 'yii\web\Session',
+        ],
     ],
 ];
