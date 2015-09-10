@@ -62,9 +62,12 @@ class CategoryController extends BaseController
     {
         $model = new Category();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            echo '<pre>';
+            var_dump($model);
+            if( $model->save()) return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $model->status = Category::STATUS_DISPLAY;
             return $this->render('create', [
                 'model' => $model,
             ]);
