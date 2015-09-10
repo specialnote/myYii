@@ -1,5 +1,5 @@
 <?php
-namespace common\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -65,10 +65,10 @@ class LoginForm extends Model
             if(preg_match($params,$this->password)){
                 $user = $this->getUser();
                 if (!$user->validatePassword($this->password)) {
-                    $this->addError($attribute, 'Incorrect password.');
+                    $this->addError($attribute, '密码不正确。');
                 }
             }else{
-                $this->addError($attribute,'Incorrect password.');
+                $this->addError($attribute,'密码不合法。');
             }
 
         }
@@ -84,10 +84,10 @@ class LoginForm extends Model
             if(preg_match($params,$this->username)){
                 $user = $this->getUser();
                 if (!$user) {
-                    $this->addError($attribute, 'Incorrect username.');
+                    $this->addError($attribute, '用户名不存在。');
                 }
             }else{
-                $this->addError($attribute, 'Incorrect username.');
+                $this->addError($attribute, '用户名不合法。');
             }
 
         }
@@ -100,7 +100,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 7 : 0);
         } else {
             return false;
         }

@@ -2,7 +2,7 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\LoginForm;
+use backend\models\LoginForm;
 
 /**
  * Site controller
@@ -34,6 +34,7 @@ class SiteController extends BaseController
 
     public function actionLogin()
     {
+        $this->layout = false;
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }

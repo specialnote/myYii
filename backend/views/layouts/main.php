@@ -46,14 +46,21 @@ AppAsset::register($this);
             'linkOptions' => ['data-method' => 'post']
         ];
     }
-    $leftItems[] = ['label'=>'我的账户','items'=>[
-        ['label'=>'个人中心','url'=>'/user/index'],
-        ['label'=>'个人设置','url'=>'/user/change'],
-    ]];
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-left'],
-        'items' => $leftItems,
-    ]);
+    $leftItems[] = [
+        ['label'=>'我的账户','items'=>[
+            ['label'=>'个人中心','url'=>'/user/index'],
+            ['label'=>'个人设置','url'=>'/user/change'],
+        ]],
+        ['label'=>'控制台','items'=>[
+            ['label'=>'分类管理','url'=>'/category/index'],
+        ]]
+    ];
+    foreach($leftItems as $v){
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-left'],
+            'items' => $v,
+        ]);
+    }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

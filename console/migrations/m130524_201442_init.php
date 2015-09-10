@@ -9,7 +9,6 @@ class m130524_201442_init extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
@@ -23,8 +22,8 @@ class m130524_201442_init extends Migration
             'changed_password'=>$this->smallInteger(1)->notNull()->defaultValue(0),
             'last_login_time'=>$this->dateTime(),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'created_at' => $this->integer(10)->notNull(),
+            'updated_at' => $this->integer(10)->notNull(),
             'group'=>Schema::TYPE_SMALLINT.'(3) NOT NULL DEFAULT 100',
             'mobile'=>Schema::TYPE_INTEGER.'(11)',
             'face'=>$this->string(50),
