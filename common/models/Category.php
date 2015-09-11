@@ -51,7 +51,7 @@ class Category extends \yii\db\ActiveRecord
             [['slug'], 'string', 'max' => 10],
             [['description'], 'string', 'max' => 500],
             [['name'], 'unique'],
-            [['slug'], 'unique']
+            [['slug'], 'unique'],
         ];
     }
 
@@ -68,8 +68,8 @@ class Category extends \yii\db\ActiveRecord
             'article_counts' => '文章数量',
             'parent' => '父级',
             'status' => '状态',
-            'created_at' => '新建',
-            'updated_at' => '更新',
+            'created_at' => '新建时间',
+            'updated_at' => '更新时间',
         ];
     }
 

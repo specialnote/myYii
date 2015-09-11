@@ -65,6 +65,7 @@ class CategoryController extends BaseController
         if ($model->load(Yii::$app->request->post())) {
             echo '<pre>';
             var_dump($model);
+            echo '</pre>';
             if( $model->save()) return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $model->status = Category::STATUS_DISPLAY;
