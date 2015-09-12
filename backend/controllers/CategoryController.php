@@ -5,7 +5,6 @@ namespace backend\controllers;
 use Yii;
 use common\models\Category;
 use yii\data\ActiveDataProvider;
-use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -62,11 +61,8 @@ class CategoryController extends BaseController
     {
         $model = new Category();
 
-        if ($model->load(Yii::$app->request->post())) {
-            echo '<pre>';
-            var_dump($model);
-            echo '</pre>';
-            if( $model->save()) return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) &&  $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $model->status = Category::STATUS_DISPLAY;
             return $this->render('create', [

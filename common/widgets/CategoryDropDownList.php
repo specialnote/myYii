@@ -17,8 +17,12 @@ class CategoryDropDownList extends yii\bootstrap\Widget{
     public $attribute;
     public $options=[];
     public $parent;
+    public $currentOptionDisabled=false;//当前选项是否禁止选择
+
     private $_categories=[];
     private $_html;
+
+
     public function init(){
         parent::init();
         $this->options['encodeSpaces']=true;
@@ -28,8 +32,12 @@ class CategoryDropDownList extends yii\bootstrap\Widget{
         if(!empty($categories)){
             foreach($categories as $v){
                 $tempArr=[];
-                $tempArr[$v['id']]=str_repeat('&nbsp;&nbsp;',$v['class']-1).$v['name'];
+                $tempArr[$v['id']]=str_repeat('    ',$v['class']-1).$v['name'];
                 $this->_categories+=$tempArr;
+                if($this->currentOptionDisabled){
+                    $model=$this->model;
+                    $this->options['options'][$model->id]=['disabled' => 'disabled'];
+                }
             }
         }
         $this->_html='<div class="form-group">';

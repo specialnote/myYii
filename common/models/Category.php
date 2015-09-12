@@ -45,7 +45,7 @@ class Category extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'slug', 'created_at', 'updated_at'], 'required'],
+            [['name', 'slug'], 'required'],
             [['article_counts', 'parent', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['slug'], 'string', 'max' => 10],
@@ -102,5 +102,16 @@ class Category extends \yii\db\ActiveRecord
             }
         }
         return $list;
+    }
+
+
+   public  function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert)){
+            $this->parent = $this->parent?$this->parent:0;
+            return true;
+        }else{
+            return false;
+        }
     }
 }

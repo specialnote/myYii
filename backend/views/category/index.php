@@ -19,9 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'layout'=>'{items} {pager} {summary} ',
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'name',
             'slug',
@@ -32,8 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','header'=>'<a style="color: #337ab7;cursor: pointer">操作</a>'],
         ],
+        'tableOptions'=>['class' => 'table table-striped table-hover']
     ]); ?>
 
 </div>

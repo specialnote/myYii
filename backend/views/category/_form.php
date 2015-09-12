@@ -27,10 +27,13 @@ use common\models\Category;
                 'options'=>[
                     'class'=>'form-control',
                 ],
+                'currentOptionDisabled'=>(Yii::$app->controller->action->id == 'update')?true:false,
             ])?>
             <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
+
             <?= $form->field($model, 'status')->radioList([Category::STATUS_DISPLAY=>'可用',Category::STATUS_HIDE=>'禁用']) ?>
         </div>
+
         <?php ActiveForm::end(); ?>
     </div>
 </div>
