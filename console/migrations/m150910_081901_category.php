@@ -15,7 +15,7 @@ class m150910_081901_category extends Migration
         $this->createTable('{{%category}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(50)->notNull()->unique(),
-            'slug' => $this->string(10)->notNull()->unique(),
+            'slug' => $this->string(20)->notNull()->unique(),
             'description' => $this->string(500),
             'article_counts'=>$this->integer()->notNull()->defaultValue(0),
             'parent' => $this->smallInteger()->notNull()->defaultValue(0),

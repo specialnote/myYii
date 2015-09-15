@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '文章分类';
+$this->title = '分类';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="category-index">
@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel'=>$searchModel,
         'layout'=>'{items} {pager} {summary} ',
         'columns' => [
             'id',
@@ -26,8 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'slug',
             //'description',
             'article_counts',
-            'parent',
-            'status',
+            [
+                'attribute' => 'parent',
+                'label'=>'父级',
+                'value'=> function($model){
+                        return  $model->getParentName($model->parent);
+                    },
+            ],
+            [
+                'attribute'=>'status',
+                'label'=>'状态',
+                'value'=>function($model){
+                    return $model->getStatusName($model->status);
+                }
+            ],
             // 'created_at',
             // 'updated_at',
 

@@ -48,7 +48,7 @@ class Category extends \yii\db\ActiveRecord
             [['name', 'slug'], 'required'],
             [['article_counts', 'parent', 'status', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 50],
-            [['slug'], 'string', 'max' => 10],
+            [['slug'], 'string', 'max' => 20],
             [['description'], 'string', 'max' => 500],
             [['name'], 'unique'],
             [['slug'], 'unique'],
@@ -112,6 +112,30 @@ class Category extends \yii\db\ActiveRecord
             return true;
         }else{
             return false;
+        }
+    }
+
+    /*
+     * 获取父类名称
+     * @param int|null $id
+     * */
+    public function getParentName($id){
+        $category = Category::findOne($id);
+        return $category?$category->name:'-';
+    }
+
+    /*
+     * 获取状态名称
+     * */
+    public function getStatusName(){
+        if($this->status == Category::STATUS_HIDE){
+            return '禁用';
+        }elseif($this->status ==Category::STATUS_DISPLAY){
+            return '可用';
+        }elseif($this->status == Category::STATUS_DELETE){
+            return '删除';
+        }else{
+            return '-';
         }
     }
 }
