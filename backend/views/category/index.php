@@ -11,8 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="category-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('新建分类', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -43,8 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'created_at',
             // 'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn','header'=>'<a style="color: #337ab7;cursor: pointer">操作</a>'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{view} {update}','header'=>'<a style="color: #337ab7;cursor: pointer">操作</a>'],
         ],
         'tableOptions'=>['class' => 'table table-striped table-hover']
     ]); ?>

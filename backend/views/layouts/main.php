@@ -53,6 +53,7 @@ AppAsset::register($this);
         ]],
         ['label'=>'控制台','items'=>[
             ['label'=>'分类管理','url'=>'/category/index'],
+            ['label'=>'文章管理','url'=>'/article/index'],
         ]]
     ];
     foreach($leftItems as $v){

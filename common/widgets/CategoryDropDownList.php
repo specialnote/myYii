@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2015/9/10 0010
- * Time: 下午 5:22
- */
 namespace common\widgets;
 
 use common\models\Category;
