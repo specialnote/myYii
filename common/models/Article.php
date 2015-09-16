@@ -48,8 +48,8 @@ class Article extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'content', 'category_id','author', 'publish_at'], 'required'],
-            [['content','cover_img'], 'string'],
-            [['status', 'view_count', 'share', 'publish_at', 'created_at', 'updated_at'], 'integer'],
+            [['content','cover_img','publish_at'], 'string'],
+            [['status', 'view_count', 'share', 'created_at', 'updated_at'], 'integer'],
 
             [['title'], 'string', 'max' => 100],
             [['category_id'], 'string', 'max' => 10],
