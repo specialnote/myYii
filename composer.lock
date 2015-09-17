@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5fe15fcdcc6c43b39968ffd29104ac62",
+    "hash": "39bb79cfff138c39c1eb4b3a64bf507b",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -222,7 +222,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cebe/markdown/zipball/54a2c49de31cc44e864ebf0500a35ef21d0010b2",
+                "url": "http://packagist.phpcomposer.com/files/cebe/markdown/54a2c49de31cc44e864ebf0500a35ef21d0010b2.zip",
                 "reference": "54a2c49de31cc44e864ebf0500a35ef21d0010b2",
                 "shasum": ""
             },
@@ -282,7 +282,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/6f389f0f25b90d0b495308efcfa073981177f0fd",
+                "url": "http://packagist.phpcomposer.com/files/ezyang/htmlpurifier/6f389f0f25b90d0b495308efcfa073981177f0fd.zip",
                 "reference": "6f389f0f25b90d0b495308efcfa073981177f0fd",
                 "shasum": ""
             },
@@ -326,7 +326,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/0697e6aa65c83edf97bb0f23d8763f94e3f11421",
+                "url": "http://packagist.phpcomposer.com/files/swiftmailer/swiftmailer/0697e6aa65c83edf97bb0f23d8763f94e3f11421.zip",
                 "reference": "0697e6aa65c83edf97bb0f23d8763f94e3f11421",
                 "shasum": ""
             },
@@ -379,7 +379,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/f42b2eb80f61992438661b01d0d74c6738e2ff38",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-framework/f42b2eb80f61992438661b01d0d74c6738e2ff38.zip",
                 "reference": "f42b2eb80f61992438661b01d0d74c6738e2ff38",
                 "shasum": ""
             },
@@ -467,7 +467,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/1b6b1e61cf91c3cdd517d6a7e71d30bb212e4af0",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-bootstrap/1b6b1e61cf91c3cdd517d6a7e71d30bb212e4af0.zip",
                 "reference": "1b6b1e61cf91c3cdd517d6a7e71d30bb212e4af0",
                 "shasum": ""
             },
@@ -517,7 +517,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-composer/zipball/ca8d23707ae47d20b0454e4b135c156f6da6d7be",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-composer/ca8d23707ae47d20b0454e4b135c156f6da6d7be.zip",
                 "reference": "ca8d23707ae47d20b0454e4b135c156f6da6d7be",
                 "shasum": ""
             },
@@ -564,7 +564,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-swiftmailer/zipball/4ec435a89e30b203cea99770910fb5499cb3627a",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-swiftmailer/4ec435a89e30b203cea99770910fb5499cb3627a.zip",
                 "reference": "4ec435a89e30b203cea99770910fb5499cb3627a",
                 "shasum": ""
             },
@@ -607,6 +607,98 @@
     ],
     "packages-dev": [
         {
+            "name": "2amigos/yii2-date-picker-widget",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/2amigos/yii2-date-picker-widget.git",
+                "reference": "89cd0d7f00785b608b4a9670016f2795f2e3984d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/2amigos/yii2-date-picker-widget/89cd0d7f00785b608b4a9670016f2795f2e3984d.zip",
+                "reference": "89cd0d7f00785b608b4a9670016f2795f2e3984d",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap-datepicker": "1.4.0",
+                "yiisoft/yii2": "~2.0.0",
+                "yiisoft/yii2-bootstrap": "~2.0.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "asset-installer-paths": {
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "dosamigos\\datepicker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "2amigOS! Consulting Group",
+                    "email": "hola@2amigos.us",
+                    "homepage": "http://2amigos.us",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Bootstrap DatePicker widget for Yii2.",
+            "homepage": "http://yiiwheels.com/extension/bootstrap-datepicker",
+            "keywords": [
+                "2amigos",
+                "datepicker",
+                "extension",
+                "widget",
+                "yii",
+                "yii 2",
+                "yii2"
+            ],
+            "time": "2015-04-02 11:48:05"
+        },
+        {
+            "name": "bower-asset/bootstrap-datepicker",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eternicode/bootstrap-datepicker.git",
+                "reference": "e7ca6bb94dc483817f2ff10fc2b723b2b935e016"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eternicode/bootstrap-datepicker/zipball/e7ca6bb94dc483817f2ff10fc2b723b2b935e016",
+                "reference": "e7ca6bb94dc483817f2ff10fc2b723b2b935e016",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap": ">=2.0.4,<4.0",
+                "bower-asset/jquery": ">=1.7.1"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "dist/css/bootstrap-datepicker.css",
+                    "dist/css/bootstrap-datepicker3.css",
+                    "js/bootstrap-datepicker.js"
+                ],
+                "bower-asset-ignore": []
+            },
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "name": "bower-asset/typeahead.js",
             "version": "v0.10.5",
             "source": {
@@ -624,9 +716,9 @@
                 "bower-asset/jquery": ">=1.7"
             },
             "require-dev": {
-                "bower-asset/jasmine-ajax": ">=1.3.1,<1.4",
-                "bower-asset/jasmine-jquery": ">=1.5.2,<1.6",
-                "bower-asset/jquery": ">=1.7,<1.8"
+                "bower-asset/jasmine-ajax": "~1.3.1",
+                "bower-asset/jasmine-jquery": "~1.5.2",
+                "bower-asset/jquery": "~1.7"
             },
             "type": "bower-asset-library",
             "extra": {
@@ -643,7 +735,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/d0190b156bcca848d401fb80f31f504f37141c8d",
+                "url": "http://packagist.phpcomposer.com/files/fzaninotto/Faker/d0190b156bcca848d401fb80f31f504f37141c8d.zip",
                 "reference": "d0190b156bcca848d401fb80f31f504f37141c8d",
                 "shasum": ""
             },
@@ -695,7 +787,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/php-diff/zipball/30e103d19519fe678ae64a60d77884ef3d71b28a",
+                "url": "http://packagist.phpcomposer.com/files/phpspec/php-diff/30e103d19519fe678ae64a60d77884ef3d71b28a.zip",
                 "reference": "30e103d19519fe678ae64a60d77884ef3d71b28a",
                 "shasum": ""
             },
@@ -729,7 +821,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-codeception/zipball/de5007e7a99359597abbfe1c88dca3ce620061c5",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-codeception/de5007e7a99359597abbfe1c88dca3ce620061c5.zip",
                 "reference": "de5007e7a99359597abbfe1c88dca3ce620061c5",
                 "shasum": ""
             },
@@ -774,7 +866,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/1b302e67521d46feb2413d9d96ca94ed82b39b0e",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-debug/1b302e67521d46feb2413d9d96ca94ed82b39b0e.zip",
                 "reference": "1b302e67521d46feb2413d9d96ca94ed82b39b0e",
                 "shasum": ""
             },
@@ -821,7 +913,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-faker/zipball/b88ca69ee226a3610b2c26c026c3203d7ac50f6c",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-faker/b88ca69ee226a3610b2c26c026c3203d7ac50f6c.zip",
                 "reference": "b88ca69ee226a3610b2c26c026c3203d7ac50f6c",
                 "shasum": ""
             },
@@ -868,7 +960,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/e5a023e8779bd774194842ec1b8fb4917cf04007",
+                "url": "http://packagist.phpcomposer.com/files/yiisoft/yii2-gii/e5a023e8779bd774194842ec1b8fb4917cf04007.zip",
                 "reference": "e5a023e8779bd774194842ec1b8fb4917cf04007",
                 "shasum": ""
             },

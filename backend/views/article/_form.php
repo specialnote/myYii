@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\Article;
+use dosamigos\datepicker\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model common\models\Article */
 /* @var $form yii\widgets\ActiveForm */
@@ -35,7 +36,17 @@ use common\models\Article;
 
         <?= $form->field($model, 'status')->radioList([Article::STATUS_DISPLAY=>'可用',Article::STATUS_HIDDEN=>'禁用']) ?>
 
-        <?= $form->field($model, 'publish_at')->textInput() ?>
+        <?= DatePicker::widget([
+            'model' => $model,
+            'attribute' => 'publish_at',
+            'template' => '{input} {addon}',
+            'clientOptions' => [
+                'autoclose' => true,
+                'format' => 'yyyy-mm-dd',
+                'language'=>'zh',
+                'weekStart'=>'1',
+            ]
+        ]);?>
 
     </div>
     <div class="form-group col-md-12">
