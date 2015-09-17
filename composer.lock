@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3d9ba323ca398b88e5c076c3513a9110",
+    "hash": "5fe15fcdcc6c43b39968ffd29104ac62",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -149,89 +149,6 @@
                 "jquery",
                 "mask",
                 "plugins"
-            ]
-        },
-        {
-            "name": "bower-asset/moment",
-            "version": "2.10.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/moment/moment.git",
-                "reference": "f3fbef9d9875bbff340b527dbe3f1c447a942f69"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/moment/moment/zipball/f3fbef9d9875bbff340b527dbe3f1c447a942f69",
-                "reference": "f3fbef9d9875bbff340b527dbe3f1c447a942f69",
-                "shasum": ""
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": "moment.js",
-                "bower-asset-ignore": [
-                    "**/.*",
-                    "benchmarks",
-                    "bower_components",
-                    "meteor",
-                    "node_modules",
-                    "scripts",
-                    "tasks",
-                    "test",
-                    "component.json",
-                    "composer.json",
-                    "CONTRIBUTING.md",
-                    "ender.js",
-                    "Gruntfile.js",
-                    "Moment.js.nuspec",
-                    "package.js",
-                    "package.json"
-                ]
-            }
-        },
-        {
-            "name": "bower-asset/nkovacs-bootstrap-datetimepicker",
-            "version": "5.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nkovacs/bootstrap-datetimepicker.git",
-                "reference": "6276661b0c1a3d5b19297b2a151e10bac311dd65"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nkovacs/bootstrap-datetimepicker/zipball/6276661b0c1a3d5b19297b2a151e10bac311dd65",
-                "reference": "6276661b0c1a3d5b19297b2a151e10bac311dd65",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/jquery": ">=1.8.3",
-                "bower-asset/moment": ">=2.9.0"
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": [
-                    "build/css/bootstrap-datetimepicker.min.css",
-                    "build/js/bootstrap-datetimepicker.min.js"
-                ],
-                "bower-asset-ignore": [
-                    "**/.*",
-                    "node_modules",
-                    "bower_components",
-                    "test",
-                    "tests"
-                ],
-                "bower-asset-private": false
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "bootstrap3 datetimepicker",
-            "keywords": [
-                "bootstrap",
-                "datepicker",
-                "datetimepicker",
-                "moment",
-                "timepicker",
-                "twitter-bootstrap"
             ]
         },
         {
@@ -398,51 +315,6 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
-        },
-        {
-            "name": "nkovacs/yii2-datetimepicker",
-            "version": "3.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nkovacs/yii2-datetimepicker.git",
-                "reference": "a0b03e419a5a60b2fa4df4757a1b35a00bb04bf6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "http://packagist.phpcomposer.com/files/nkovacs/yii2-datetimepicker/a0b03e419a5a60b2fa4df4757a1b35a00bb04bf6.zip",
-                "reference": "a0b03e419a5a60b2fa4df4757a1b35a00bb04bf6",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/nkovacs-bootstrap-datetimepicker": "~5.0",
-                "php": ">=5.4.0",
-                "yiisoft/yii2": "^2.0.4",
-                "yiisoft/yii2-bootstrap": "*"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "nkovacs\\datetimepicker\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Nikola Kovacs",
-                    "email": "nikola.kovacs@gmail.com"
-                }
-            ],
-            "description": "Bootstrap datetimepicker widget for Yii 2, based on Eonasdan/bootstrap-datetimepicker.",
-            "keywords": [
-                "DateTimePicker",
-                "bootstrap",
-                "extension",
-                "yii2"
-            ],
-            "time": "2015-08-24 12:00:39"
         },
         {
             "name": "swiftmailer/swiftmailer",
