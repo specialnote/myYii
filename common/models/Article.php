@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\FileHelper;
 use yii\helpers\HtmlPurifier;
 use yii\behaviors\TimestampBehavior;
 
@@ -47,13 +48,17 @@ class Article extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'category_id','author', 'publish_at'], 'required'],
-            [['content','cover_img','publish_at'], 'string'],
+            [['title', 'content', 'category_id', 'publish_at'], 'required'],
+            [['content','cover_img','publish_at','author'], 'string'],
             [['status', 'view_count', 'share', 'created_at', 'updated_at'], 'integer'],
 
             [['title'], 'string', 'max' => 100],
             [['category_id'], 'string', 'max' => 10],
             [['author'], 'string', 'max' => 30],
+          //  ['cover_img','validateImg'],
+            ['author','filter','filter'=>function($value){
+                return $value?$value:Yii::$app->user->identity->username;
+            }],
 
             [['content'], 'filter','filter'=>function($value){
                 return HtmlPurifier::process($value);
@@ -81,4 +86,37 @@ class Article extends \yii\db\ActiveRecord
             'updated_at' => '更新时间',
         ];
     }
+
+    /*
+     * 获取文章状态名称
+     * */
+    public function getStatusName($status){
+        if($status == Article::STATUS_DISPLAY){
+            return '显示';
+        }elseif($status == Article::STATUS_HIDDEN){
+            return '隐藏';
+        }else{
+            return '';
+        }
+    }
+   /* public function validateImg($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $file = \Yii::$app->basePath.'/web/'.ltrim($this->cover_img,'/');
+
+            if(is_file($file)){
+                $extension = pathinfo($file,PATHINFO_EXTENSION);
+                if(!in_array($extension,['jpg','png','jpeg','bmp','gif'])){
+                    $this->addError($attribute,'文件后缀不合法');
+                }
+            }else{
+                $this->addError($attribute,'文件不存在');
+            }
+        }
+    }*/
+    /*public function beforeSave($insert){
+        if(parent::beforeSave($insert)){
+            $this->publish_at = strtotime($this->publish_at);
+        }
+    }*/
 }

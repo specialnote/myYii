@@ -77,7 +77,8 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'手机不合法','on'=>['change_mobile','login','register']],
             ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法','on'=>['change_email','login','register']],
 
-            ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/user/captcha','on'=>['login','register','change_username','change_password','change_email','change_mobile']],
+            ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/site/captcha','on'=>['login','register']],
+            ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/user/captcha','on'=>['change_username','change_password','change_email','change_mobile']],
             ['pass1','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'新密码不合法','on'=>['change_password']],
             ['pass2','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'确认密码不合法','on'=>['change_password']],
             ['pass2','compare','compareAttribute'=>'pass1','operator'=>'===','message'=>'确认密码和新密码不一样','on'=>['change_password']],

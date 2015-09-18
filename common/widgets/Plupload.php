@@ -35,7 +35,7 @@ class Plupload extends yii\bootstrap\Widget{
         $path = $model->$attribute?$model->$attribute:"/images/noimage.gif";
         $this->_html.='<div class="form-group field-article-author" id="container">';
         $this->_html.=Html::activeLabel($model,$attribute);
-        $this->_html.=Html::activeHiddenInput($model,$attribute,['id'=>'hidden_input']);
+        $this->_html.=Html::activeHiddenInput($model,$attribute,['id'=>'hidden_input','value'=>$path]);
         $this->_html .= '<div id="pickfiles" style="height:150px;min-width:150px;max-width: 300px;overflow: hidden;"><img height="150" src="'.$path.'" /></div>';
         $this->_html.='</div>  ';
 		UploadAsset::register($this->view);

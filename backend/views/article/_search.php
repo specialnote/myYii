@@ -15,15 +15,24 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <div class="col-md-12">
+        <div class="col-md-2">
+            <?= $form->field($model, 'title') ?>
+        </div>
+        <div class="col-md-2"><?= $form->field($model, 'category_id') ?></div>
+        <div class="col-md-2"><?php  echo $form->field($model, 'author') ?></div>
+        <div class="col-md-2"><?php  echo $form->field($model, 'publish_at') ?></div>
+        <div class="col-md-3">
+            <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'title') ?>
 
-    <?= $form->field($model, 'content') ?>
 
-    <?= $form->field($model, 'category_id') ?>
 
-    <?php // echo $form->field($model, 'author') ?>
+
+
 
     <?php // echo $form->field($model, 'status') ?>
 
@@ -31,16 +40,13 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'share') ?>
 
-    <?php // echo $form->field($model, 'publish_at') ?>
+
 
     <?php // echo $form->field($model, 'created_at') ?>
 
     <?php // echo $form->field($model, 'updated_at') ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
-    </div>
+
 
     <?php ActiveForm::end(); ?>
 

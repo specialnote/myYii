@@ -12,7 +12,6 @@ switch ($action) {
     case 'config':
         $result =  json_encode($CONFIG);
         break;
-
     /* 上传图片 */
     case 'uploadimage':
     /* 上传涂鸦 */

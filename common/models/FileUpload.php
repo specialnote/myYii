@@ -29,7 +29,7 @@ class FileUpload extends \yii\base\Object
             throw new Exception('fileInputName属性不能为空');
         }
         if(!$this->savePath){
-            $this->savePath = \Yii::$app->basePath.'/web/uploads';
+            $this->savePath = \Yii::$app->basePath.'/web/uploads/images';
         }
         if(!file_exists(rtrim($this->savePath,'/'))){
             FileHelper::createDirectory($this->savePath);
@@ -65,8 +65,8 @@ class FileUpload extends \yii\base\Object
 
         $this->baseName = $this->_uploadFile->baseName;
         $this->_name = \Yii::$app->security->generateRandomString();
-        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.$this->_name.'.'.$this->extension;
-        $this->urlPath = '/uploads/'.$this->_path.'/'.$this->baseName.$this->_name.'.'.$this->extension;
+        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->extension;
+        $this->urlPath = '/uploads/images/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->extension;
     }
 
     public function save(){

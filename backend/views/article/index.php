@@ -11,7 +11,7 @@ $this->title = '文章';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="article-index">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a('新建文章', ['create'], ['class' => 'btn btn-success']) ?>
@@ -19,21 +19,39 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+       // 'filterModel' => $searchModel,
         'columns' => [
             'id',
+            [
+                'attribute'=>'cover_img',
+                'format'=>['image',['width'=>'50']],
+                'value'=>function($model){
+                    return $model->cover_img;
+                }
+            ],
             'title',
-            'content:ntext',
-            'category_id',
+           // 'content:ntext',
+            [
+                'attribute'=>'category_id',
+                'value'=>function($model){
+                    return \common\models\Category::getCategoryName($model->category_id);
+                }
+            ],
              'author',
-             'status',
-             'view_count',
-             'share',
              'publish_at',
-            // 'created_at',
-            // 'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn','template'=>'{view} {update} {delete}'],
+            'view_count',
+            'share',
+            [
+                'attribute'=>'status',
+                'value'=>function($model){
+                    return $model->getStatusName($model->status);
+                },
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template'=>'{view} {update} {delete}',
+                'options'=>['width'=>'75'],
+            ],
         ],
         'tableOptions'=>['class' => 'table table-striped table-hover']
     ]); ?>

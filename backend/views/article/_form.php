@@ -48,7 +48,6 @@ use dosamigos\datepicker\DatePicker;
             'clientOptions' => [
                 'autoclose' => true,
                 'format' => 'yyyy-mm-dd',
-
                 'weekStart'=>'1',
             ]
         ]);?>

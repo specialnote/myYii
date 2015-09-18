@@ -41,7 +41,8 @@ class UEditor extends yii\bootstrap\Widget{
         UEditorAsset::register($this->view);
         $this->view->registerJs('
              var ue = UE.getEditor("'.$this->attribute.'",{
-                 autoHeightEnabled: false
+                 autoHeightEnabled: false,
+
              });
         ');
         return $this->_html;

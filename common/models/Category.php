@@ -138,4 +138,14 @@ class Category extends \yii\db\ActiveRecord
             return '-';
         }
     }
+
+    /*
+     * 获取分类名称
+     * */
+    public static function getCategoryName($id){
+        if(!$id)return '';
+        $category = self::findOne($id);
+        if(!$category)return '';
+        return $category->name;
+    }
 }

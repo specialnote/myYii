@@ -18,8 +18,8 @@ class ArticleSearch extends Article
     public function rules()
     {
         return [
-            [['id', 'status', 'view_count', 'share', 'publish_at', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'content', 'category_id', 'author'], 'safe'],
+            [[ 'publish_at'], 'string'],
+            [['title', 'category_id', 'author'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ArticleSearch extends Article
      */
     public function search($params)
     {
-        $query = Article::find();
+        $query = Article::find()->where(['in','status',[Article::STATUS_HIDDEN,Article::STATUS_DISPLAY]]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,21 +54,28 @@ class ArticleSearch extends Article
             // $query->where('0=1');
             return $dataProvider;
         }
+        if($this->publish_at){
+            $query->andFilterWhere(['like','publish_at',$this->publish_at]);
+        }
+        if($this->title){
+            $query->andFilterWhere(['like', 'title', $this->title]);
+        }
+        if($this->author){
+            $query->andFilterWhere(['like', 'author', $this->author]);
+        }
+        if($this->category_id){
+            $category = Category::find()->where(['like','name',$this->category_id])->all();
+            if($category){
+                $ids = [];
+                foreach (($category) as $v) {
+                    $ids[] = $v->id;
+                }
+                $query->andFilterWhere(['in', 'category_id', $ids]);
+            }else{
+                $query->andFilterWhere(['category_id'=>0]);
+            }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
-            'view_count' => $this->view_count,
-            'share' => $this->share,
-            'publish_at' => $this->publish_at,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
-
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content])
-            ->andFilterWhere(['like', 'category_id', $this->category_id])
-            ->andFilterWhere(['like', 'author', $this->author]);
+        }
 
         return $dataProvider;
     }
