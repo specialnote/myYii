@@ -32,10 +32,12 @@ use dosamigos\datepicker\DatePicker;
 
         <?= $form->field($model, 'author')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'cover_img')->textInput(['maxlength' => true]) ?>
         <?= \common\widgets\Plupload::widget([
+            'model'=>$model,
+            'attribute'=>'cover_img',
             'url'=>'/file/upload'
         ])?>
+
         <?= $form->field($model, 'status')->radioList([Article::STATUS_DISPLAY=>'可用',Article::STATUS_HIDDEN=>'禁用']) ?>
 
         <?= DatePicker::widget([

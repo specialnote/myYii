@@ -19,19 +19,19 @@ function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken)
             '_csrf':csrfToken
         },
         init: {
-            PostInit: function() {
-                document.getElementById('uploadfiles').onclick = function() {
-                    uploader.start();
-                    return false;
-                };
+            FilesAdded: function(up, files) {
+                uploader.start();
             },
-
-
             UploadProgress: function(up, file) {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                $('#'+contatinerId+' p').text('已上传:'+file.percent+'%');
             },
             FileUploaded:function (up, file, result) {
-                $('#'+contatinerId+' p').text('code: '+result.code+' ; message: '+result.message);
+                result =  $.parseJSON(result.response);
+                if(result.code == 200){
+                    $('#'+buttonId).html('<img src="'+result.path+'" height="150" />');
+                    $('#hidden_input').val(result.path);
+                }
+                //$('#'+contatinerId).append('<p>'+result.message+'</p>');
             },
             Error: function(up, err) {
                 document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
