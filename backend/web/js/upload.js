@@ -28,7 +28,7 @@ function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken)
             FileUploaded:function (up, file, result) {
                 result =  $.parseJSON(result.response);
                 if(result.code == 200){
-                    $('#'+buttonId).html('<img src="'+result.path+'" height="150" />');
+                    $('#'+buttonId).html('<img src="'+result.path+'" height="50" />');
                     $('#hidden_input').val(result.path);
                 }
                 //$('#'+contatinerId).append('<p>'+result.message+'</p>');

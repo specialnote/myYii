@@ -11,7 +11,7 @@ class FileUpload extends \yii\base\Object
     public $fileInputName = 'file';
     public $savePath ;
     public $allowExt = ['jpg','png','jpeg','bmp','gif'];
-    public $maxFileSize=1024*1000*50;
+    public $maxFileSize=1024100000;
     public $extension;
     public $baseName;
     public $fileSize;

@@ -23,8 +23,10 @@ use yii\widgets\ActiveForm;
         <div class="col-md-2"><?php  echo $form->field($model, 'author') ?></div>
         <div class="col-md-2"><?php  echo $form->field($model, 'publish_at') ?></div>
         <div class="col-md-3">
-            <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-            <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+            <div class="form-group">
+                <?= Html::submitButton('搜索', ['class' => 'btn btn-primary form-control','style'=>'width:60px;']) ?><br/>
+                <?= Html::resetButton('重置', ['class' => 'btn btn-default form-control','style'=>'width:60px;']) ?>
+            </div>
         </div>
     </div>
 
