@@ -2,7 +2,6 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -80,7 +79,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
+  /*  public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -94,7 +93,7 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Logs out the current user.
@@ -150,16 +149,20 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
+            if ($user = $model->signUp()) {
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
                 }
             }
+        }else{
+            return $this->render('signup', [
+                'model' => $model,
+            ]);
         }
 
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
+
+
+
     }
 
     /**

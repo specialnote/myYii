@@ -14,7 +14,7 @@ class m150827_072330_alter_user extends Migration
             'password'=>Yii::$app->security->generatePasswordHash('123456'),
             'auth_key'=>Yii::$app->security->generateRandomString(),
             'password_reset_token' =>Yii::$app->security->generateRandomString(),
-            'group'=>'300',
+            'group'=>'30',
             'last_login_time'=>time(),
             'created_at'=>time(),
             'updated_at'=>time(),

@@ -54,7 +54,10 @@ AppAsset::register($this);
         ['label'=>'控制台','items'=>[
             ['label'=>'分类管理','url'=>'/category/index'],
             ['label'=>'文章管理','url'=>'/article/index'],
-        ]]
+        ]],
+        ['label'=>'权限管理','items'=>[
+            ['label'=>'节点管理','url'=>'/node/index']
+        ]],
     ];
     foreach($leftItems as $v){
         echo Nav::widget([
