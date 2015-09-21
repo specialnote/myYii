@@ -23,5 +23,11 @@ return [
         'session' => [
             'class' => 'yii\web\Session',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'itemTable' => 'auth_item',
+            'assignmentTable' => 'auth_assignment',
+            'itemChildTable' => 'auth_item_child',
+        ],
     ],
 ];
