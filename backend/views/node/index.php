@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="article-index">
 
-    
+
     <p>
         <?= Html::a('新建文章', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
