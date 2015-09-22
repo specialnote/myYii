@@ -3,57 +3,37 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\ArticleSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = '权限节点';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="article-index">
+<div class="node-index">
 
 
     <p>
-        <?= Html::a('新建文章', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('新建节点', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>节点名称</th>
+                <th>节点描述</th>
+                <th>操 作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($nodes as $v){?>
+            <tr>
+                <td><?= $v->name?></td>
+                <td><?= $v->description?></td>
+                <td style="width: 50px;">
+                    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>',['/node/delete','name'=>$v->name])?>
+                    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>',['/node/update','name'=>$v->name])?>
+                </td>
+            </tr>
+        <?php }?>
+        </tbody>
+    </table>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-       // 'filterModel' => $searchModel,
-        'columns' => [
-            'id',
-            [
-                'attribute'=>'cover_img',
-                'format'=>['image',['width'=>'50']],
-                'value'=>function($model){
-                    return $model->cover_img;
-                }
-            ],
-            'title',
-           // 'content:ntext',
-            [
-                'attribute'=>'category_id',
-                'value'=>function($model){
-                    return \common\models\Category::getCategoryName($model->category_id);
-                }
-            ],
-             'author',
-             'publish_at',
-            'view_count',
-            'share',
-            [
-                'attribute'=>'status',
-                'value'=>function($model){
-                    return $model->getStatusName($model->status);
-                },
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template'=>'{view} {update} {delete}',
-                'options'=>['width'=>'75'],
-            ],
-        ],
-        'tableOptions'=>['class' => 'table table-striped table-hover']
-    ]); ?>
 
 </div>

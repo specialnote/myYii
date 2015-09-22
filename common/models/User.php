@@ -60,13 +60,14 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         return [
             [['username', 'mobile', 'email', 'created_at', 'updated_at'], 'required'],
-            [['changed_password', 'status', 'created_at', 'updated_at', 'group', 'mobile'], 'integer'],
+            [['changed_password', 'status', 'created_at', 'updated_at', 'group'], 'integer'],
             [['last_login_time'], 'safe'],
             [['password_reset_token'], 'unique'],
-            [['auth_key', 'email'], 'string', 'max' => 32],
+            [['auth_key', 'email', 'mobile'], 'string', 'max' => 32],
             [['username', 'password', 'password_reset_token'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            [['mobile'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['group', 'default', 'value' => self::GROUP_READER],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
@@ -74,10 +75,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
 
             ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法','on'=>['change_username','login','register']],
             ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法','on'=>['login','register','change_password']],
-            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'手机不合法','on'=>['change_mobile','login','register']],
+            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'mobile is not allowed','on'=>['change_mobile','login','register']],
             ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法','on'=>['change_email','login','register']],
 
-            ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/site/captcha','on'=>['login','register']],
+            ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/site/captcha','on'=>['login']],
             ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/user/captcha','on'=>['change_username','change_password','change_email','change_mobile']],
             ['pass1','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'新密码不合法','on'=>['change_password']],
             ['pass2','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'确认密码不合法','on'=>['change_password']],
@@ -271,4 +272,9 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function getIsAdmin(){
+        return $this->group === User::GROUP_ADMIN;
+    }
+    
 }
