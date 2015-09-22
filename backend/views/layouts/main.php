@@ -52,6 +52,7 @@ AppAsset::register($this);
             ['label'=>'个人设置','url'=>'/user/change'],
         ]],
         ['label'=>'控制台','items'=>[
+            ['label'=>'用户管理','url'=>'/user/index'],
             ['label'=>'分类管理','url'=>'/category/index'],
             ['label'=>'文章管理','url'=>'/article/index'],
         ]],

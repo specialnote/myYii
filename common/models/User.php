@@ -63,26 +63,34 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             [['changed_password', 'status', 'created_at', 'updated_at', 'group'], 'integer'],
             [['last_login_time'], 'safe'],
             [['password_reset_token'], 'unique'],
-            [['auth_key', 'email', 'mobile'], 'string', 'max' => 32],
+            [['auth_key', 'email'], 'string', 'max' => 32],
             [['username', 'password', 'password_reset_token'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['mobile'], 'unique'],
+            ['mobile','string','max'=>11,'min'=>11],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['group', 'default', 'value' => self::GROUP_READER],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['group', 'in', 'range' => [self::GROUP_READER, self::GROUP_WRITER,self::GROUP_ADMIN]],
 
-            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法','on'=>['change_username','login','register']],
-            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法','on'=>['login','register','change_password']],
-            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'mobile is not allowed','on'=>['change_mobile','login','register']],
-            ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法','on'=>['change_email','login','register']],
+            ['username', 'match', 'pattern' => Yii::$app->params['regex.username'],'message'=>'用户名不合法'],
+            ['password','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'密码不合法'],
+            ['mobile','match','pattern'=>Yii::$app->params['regex.mobile'],'message'=>'手机号不合法'],
+            ['email','match','pattern'=>Yii::$app->params['regex.email'],'message'=>'邮箱不合法'],
 
             ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/site/captcha','on'=>['login']],
             ['verifyCode', 'captcha','message'=>'验证码不正确','captchaAction'=>'/user/captcha','on'=>['change_username','change_password','change_email','change_mobile']],
             ['pass1','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'新密码不合法','on'=>['change_password']],
             ['pass2','match','pattern'=>Yii::$app->params['regex.password'],'message'=>'确认密码不合法','on'=>['change_password']],
             ['pass2','compare','compareAttribute'=>'pass1','operator'=>'===','message'=>'确认密码和新密码不一样','on'=>['change_password']],
+
+            ['password','filter','filter'=>function($value){
+                return Yii::$app->security->generatePasswordHash($value);
+            },'on'=>'create_user'],
+            ['changed_password','filter','filter'=>function($value){
+                return false;
+            },'on'=>'create_user'],
         ];
     }
 
@@ -96,6 +104,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'register' => ['username', 'email', 'password','mobile'],
             'change_username'=>['username','verifyCode'],
             'change_password'=>['password','pass1','pass2','verifyCode'],
+            'create_user'=>['username','password','email','mobile','face','status','group','changed_password'],
         ];
     }
 
@@ -110,20 +119,34 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'auth_key' => 'Auth Key',
             'password' => '密 码',
             'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
+            'email' => '邮箱',
             'changed_password' => 'Changed Password',
-            'last_login_time' => 'Last Login Time',
-            'status' => 'Status',
+            'last_login_time' => '最后登录时间',
+            'status' => '状态',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'group' => 'Group',
-            'mobile' => 'Mobile',
+            'group' => '分组',
+            'mobile' => '手机',
+
             'verifyCode'=>'验证码',
             'pass1'=>'新密码',
             'pass2'=>'确认密码',
         ];
     }
 
+    /**
+     * @param bool $insert
+     */
+   /* public function beforeSave($insert){
+           if(parent::beforeSave($insert)){
+               if($insert == 'insert'){
+                   $this->password = Yii::$app->security->generatePasswordHash($this->password);
+                   $this->changed_password = 0;
+                   return true;
+               }
+           }
+        return false;
+    }*/
 
     /**
      * @inheritdoc
@@ -277,6 +300,9 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         return $this->group === User::GROUP_ADMIN;
     }
 
+    /*
+     * 设置不同场景
+     * */
     public function setMyScenario($act){
         switch($act){
             case 'username':
@@ -293,6 +319,32 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
                 break;
             default:
                 break;
+        }
+    }
+
+    /*
+     * 获取状态名称
+     * */
+    public function getStatusName(){
+        if($this->status === User::STATUS_ACTIVE){
+            return '可用';
+        }else{
+            return '禁用';
+        }
+    }
+
+    /*
+     * 获取分组名称
+     * */
+    public function getGroupName(){
+        if($this->group === User::GROUP_ADMIN){
+            return '管理员';
+        }elseif($this->group === User::GROUP_READER){
+            return '普通用户';
+        }elseif($this->group === User::GROUP_WRITER){
+            return '作者';
+        }else{
+            return '未知';
         }
     }
     

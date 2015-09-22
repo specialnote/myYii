@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\User;
 use Yii;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -155,6 +156,7 @@ class SiteController extends Controller
                 }
             }
         }else{
+            $model->group = User::GROUP_READER;
             return $this->render('signup', [
                 'model' => $model,
             ]);
