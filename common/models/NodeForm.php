@@ -59,4 +59,25 @@ class NodeForm extends Model
             return false;
         }
     }
+
+    public function update($name){
+        if($this->validate()){
+            $authManager = Yii::$app->authManager;
+            $node = $authManager->getPermission($name);
+            if(!$node) return false;
+            $authManager->remove($node);
+
+            $node = $authManager->createPermission($this->name);
+            $node->description = $this->description;
+            $authManager->add($node);
+            if(!empty($this->parent)){
+                $parent = $authManager->getPermission($this->parent);
+                $authManager->addChild($parent,$node);
+            }
+            return true;
+        }
+        return false;
+    }
+
+  
 }

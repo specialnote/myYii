@@ -276,5 +276,24 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     public function getIsAdmin(){
         return $this->group === User::GROUP_ADMIN;
     }
+
+    public function setMyScenario($act){
+        switch($act){
+            case 'username':
+                $this->setScenario('change_username');
+                break;
+            case 'mobile':
+                break;
+            case 'email':
+                break;
+            case 'password':
+                $this->setScenario('change_password');
+                break;
+            case 'face':
+                break;
+            default:
+                break;
+        }
+    }
     
 }

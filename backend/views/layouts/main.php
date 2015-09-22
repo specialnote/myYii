@@ -56,7 +56,8 @@ AppAsset::register($this);
             ['label'=>'文章管理','url'=>'/article/index'],
         ]],
         ['label'=>'权限管理','items'=>[
-            ['label'=>'节点管理','url'=>'/node/index']
+            ['label'=>'节点管理','url'=>'/node/index'],
+            ['label'=>'角色管理','url'=>'/role/index'],
         ]],
     ];
     foreach($leftItems as $v){

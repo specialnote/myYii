@@ -37,23 +37,8 @@ class UserController extends BaseController
         $act = Yii::$app->request->get('act');
         $act = $act?$act:'username';
         $model = Yii::$app->user->identity;
-        //设置场景
-        switch($act){
-            case 'username':
-                $model->setScenario('change_username');
-                break;
-            case 'mobile':
-                break;
-            case 'email':
-                break;
-            case 'password':
-                $model->setScenario('change_password');
-                break;
-            case 'face':
-                break;
-            default:
-                break;
-        }
+
+        $model->setMyScenario($act);//设置场景
         $change = Yii::$app->request->post('change');
         if($change){
             switch($change) {
