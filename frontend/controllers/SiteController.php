@@ -12,6 +12,9 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\NotFoundHttpException;
+use yii\base\Exception;
+use frontend\models\LoginForm;
 
 /**
  * Site controller
@@ -58,9 +61,12 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'captcha' => [
+            'captcha' =>  [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'height' => 50,
+                'width' => 80,
+                'minLength' => 4,
+                'maxLength' => 4
             ],
         ];
     }
@@ -80,7 +86,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-  /*  public function actionLogin()
+    public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -94,7 +100,7 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
-    }*/
+    }
 
     /**
      * Logs out the current user.
@@ -155,15 +161,12 @@ class SiteController extends Controller
                     return $this->goHome();
                 }
             }
-        }else{
-            $model->group = User::GROUP_READER;
-            return $this->render('signup', [
-                'model' => $model,
-            ]);
         }
 
-
-
+        $model->group = User::GROUP_READER;
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
 
     }
 
@@ -214,5 +217,79 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionChange(){
+        if(Yii::$app->user->isGuest){return $this->redirect('/site/login');}
+
+        $act = Yii::$app->request->get('act');
+        $act = $act?$act:'username';
+        $model = $this->findModel(Yii::$app->user->id);
+
+        $model->setMyScenario($act);//设置场景
+
+        if(Yii::$app->request->isPost){
+            $change = Yii::$app->request->post('change');
+            switch($change) {
+                case 'username':
+                    if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                        return $this->goBack();
+                    } else {
+                        throw new Exception('用户名修改失败');
+                    }
+                    break;
+                case 'password':
+                    $form = Yii::$app->request->post('User');
+                    if(!$model->validate('verifyCode')){
+                        echo '验证码不正确';
+                        die;
+                    }
+                    if (Yii::$app->security->validatePassword($form['password'], $model->password)) {
+                        if ($form['pass1'] === $form['pass2']) {
+                            $model->password = Yii::$app->security->generatePasswordHash($form['pass1']);
+                            if ($model->save()) {
+                                return $this->goBack();
+                            } else {
+                                echo '<pre>';
+                                var_dump($_POST);
+                                //throw new Exception('密码修改失败');
+                            }
+                        } else {
+                            throw new Exception('确认密码和新密码不一样');
+                        }
+                    } else {
+                        throw new Exception('原密码不正确');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $this->render('change',[
+            'act'=>$act,
+            'model'=>$model,
+        ]);
+
+    }
+
+    /**
+     * Finds the User model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return User the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = User::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

@@ -52,6 +52,9 @@ class Category extends \yii\db\ActiveRecord
             [['description'], 'string', 'max' => 500],
             [['name'], 'unique'],
             [['slug'], 'unique'],
+            ['parent','filter','filter'=>function($value){
+                return $value?$value:0;
+            }],
         ];
     }
 
@@ -105,7 +108,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
 
-   public  function beforeSave($insert)
+  /* public  function beforeSave($insert)
     {
         if(parent::beforeSave($insert)){
             $this->parent = $this->parent?$this->parent:0;
@@ -113,7 +116,7 @@ class Category extends \yii\db\ActiveRecord
         }else{
             return false;
         }
-    }
+    }*/
 
     /*
      * 获取父类名称
@@ -124,9 +127,10 @@ class Category extends \yii\db\ActiveRecord
         return $category?$category->name:'-';
     }
 
-    /*
+    /**
      * 获取状态名称
-     * */
+     * @return string
+     */
     public function getStatusName(){
         if($this->status == Category::STATUS_HIDE){
             return '禁用';
@@ -139,9 +143,11 @@ class Category extends \yii\db\ActiveRecord
         }
     }
 
-    /*
+    /**
      * 获取分类名称
-     * */
+     * @param $id
+     * @return string
+     */
     public static function getCategoryName($id){
         if(!$id)return '';
         $category = self::findOne($id);
