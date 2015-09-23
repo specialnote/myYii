@@ -70,7 +70,7 @@ class UserController extends BaseController
         $model = new User();
         $model->setScenario('create_user');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $model->status = User::STATUS_ACTIVE;
             $model->group = User::GROUP_READER;
@@ -89,7 +89,7 @@ class UserController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->setScenario('update_user');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

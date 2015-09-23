@@ -86,6 +86,7 @@ class SignupForm extends Model
             $user->status = User::STATUS_ACTIVE;
             $user->group = $this->group;
             $user->changed_password = true;
+            $user->password_reset_token = Yii::$app->security->generateRandomString();
 
             $user->setPassword($this->password);
             $user->generateAuthKey();

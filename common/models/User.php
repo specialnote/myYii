@@ -91,6 +91,12 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             ['changed_password','filter','filter'=>function($value){
                 return false;
             },'on'=>'create_user'],
+            ['auth_key','filter','filter'=>function($value){
+                return Yii::$app->security->generateRandomString();
+            },'on'=>'create_user'],
+            ['password_reset_token','filter','filter'=>function($value){
+                return Yii::$app->security->generateRandomString();
+            },'on'=>'create_user'],
         ];
     }
 
@@ -101,10 +107,11 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         return [
             'login' => ['username', 'password'],
-            'register' => ['username', 'email', 'password','mobile'],
+            'register' => ['username','password','email','mobile','status','group','changed_password','auth_key','password_reset_token'],
             'change_username'=>['username','verifyCode'],
             'change_password'=>['password','pass1','pass2','verifyCode'],
-            'create_user'=>['username','password','email','mobile','face','status','group','changed_password'],
+            'create_user'=>['username','password','email','mobile','face','status','group','changed_password','auth_key','password_reset_token'],
+            'update_user'=>['username','email','mobile','face','status','group'],
         ];
     }
 

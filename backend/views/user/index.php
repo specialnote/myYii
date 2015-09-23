@@ -23,6 +23,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             'id',
+            [
+                'format'=>['image','options'=>['width'=>'50px']],
+                'attribute'=>'face',
+                'value'=>function($model){
+                    return $model->face;
+                }
+            ],
             'username',
             'email',
             'mobile',
@@ -41,14 +48,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'last_login_time',
                 'value'=>function($model){
-                    // return date('Y-m-d H:i',strtotime($model->last_login_time));
-                    return $model->last_login_time;
+                     return $model->last_login_time?date('Y-m-d H:i',strtotime($model->last_login_time)):'';
                 }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template'=>'{view} {update} {delete}',
+                'template'=>'{view} {update} {delete} {options}',
                 'options'=>['width'=>'75'],
+                'buttons'=>[
+                    'options'=>Html::a('权限',['/role/role'])
+                ],
             ],
         ],
     ]); ?>

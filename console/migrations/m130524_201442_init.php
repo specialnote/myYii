@@ -25,8 +25,8 @@ class m130524_201442_init extends Migration
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
             'group'=>Schema::TYPE_SMALLINT.'(3) NOT NULL DEFAULT 10',
-            'mobile'=>Schema::TYPE_INTEGER.'(11)',
-            'face'=>$this->string(50),
+            'mobile'=>$this->string(11),
+            'face'=>$this->string(100),
         ], $tableOptions);
     }
 
