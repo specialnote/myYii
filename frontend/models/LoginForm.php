@@ -1,5 +1,5 @@
 <?php
-namespace backend\models;
+namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
@@ -61,6 +61,9 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
+        if(!$this->password){
+            $this->addError($attribute, '密码不能为空。');
+        }
         if (!$this->hasErrors()) {
             if(preg_match($params,$this->password)){
                 $user = $this->getUser();

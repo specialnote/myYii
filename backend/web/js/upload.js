@@ -27,11 +27,10 @@ function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken)
             },
             FileUploaded:function (up, file, result) {
                 result =  $.parseJSON(result.response);
-                if(result.code == 200){
+                if(result.code == 0){
                     $('#'+buttonId).html('<img src="'+result.path+'" height="50" />');
                     $('#hidden_input').val(result.path);
                 }
-                //$('#'+contatinerId).append('<p>'+result.message+'</p>');
             },
             Error: function(up, err) {
                 document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
