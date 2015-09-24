@@ -68,13 +68,13 @@ class UserController extends BaseController
         $model->setScenario('create_user');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $model->status = User::STATUS_ACTIVE;
-            $model->group = User::GROUP_READER;
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        $model->status = User::STATUS_ACTIVE;
+        $model->group = User::GROUP_READER;
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**

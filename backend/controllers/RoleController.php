@@ -3,6 +3,7 @@ namespace backend\controllers;
 
 use common\models\RoleForm;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 
 class RoleController extends BaseController{
     public function actionIndex(){
@@ -74,12 +75,22 @@ class RoleController extends BaseController{
             throw new Exception('节点未找到');
         }
         if(\Yii::$app->request->isPost){
-
+            $nodes = \Yii::$app->request->post('node');
+            $authManager->removeChildren($role);
+            foreach($nodes as $v){
+                $node = $authManager->getPermission($v);
+                if(!$node)continue;
+                $authManager->addChild($role,$node);
+            }
+            return $this->redirect(['/role/index']);
         }
-
-        $nodes = $authManager->getRoles();
-        $this->render('node',[
+        $roleNodes = $authManager->getPermissionsByRole($name);
+        $roleNodes = array_keys($roleNodes);
+        $nodes = $authManager->getPermissions();
+        return $this->render('node',[
             'nodes'=>$nodes,
+            'roleNodes'=>$roleNodes,
+            'name'=>$name,
         ]);
     }
 
