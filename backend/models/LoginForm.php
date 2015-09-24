@@ -84,7 +84,7 @@ class LoginForm extends Model
             if(preg_match($params,$this->username)){
                 $user = $this->getUser();
                 if (!$user) {
-                    $this->addError($attribute, '用户名不存在。');
+                    $this->addError($attribute, '用户名不存在或用户没有权限。');
                 }
             }else{
                 $this->addError($attribute, '用户名不合法。');
@@ -100,6 +100,11 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            Yii::$app->user->on(\Yii\web\User::EVENT_AFTER_LOGIN,function($event){
+                $user = $event->identity;
+                $user->last_login_time = date('Y-m-d H:i:s',time());
+                $user->update(false);
+            });
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 7 : 0);
         } else {
             return false;
@@ -121,6 +126,9 @@ class LoginForm extends Model
         }
         if($this->_user === null){
             $this->_user = User::findByMobile($this->username);
+        }
+        if(!in_array($this->_user->group,[User::GROUP_ADMIN,User::GROUP_WRITER])){
+            return false;
         }
         return $this->_user;
     }

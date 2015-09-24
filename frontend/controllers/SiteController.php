@@ -272,6 +272,18 @@ class SiteController extends Controller
 
     }
 
+    public function actionMail(){
+        $mail= Yii::$app->mailer->compose();
+        $mail->setTo('1173200235@qq.com');
+        $mail->setSubject("邮件测试");
+        //$mail->setTextBody('zheshisha ');   //发布纯文字文本
+        $mail->setHtmlBody("<b>问我我我我我</b>");    //发布可以带html标签的文本
+        if($mail->send())
+            echo "success";
+        else
+            echo "failse";
+        die();
+    }
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
