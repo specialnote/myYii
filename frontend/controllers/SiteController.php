@@ -244,26 +244,21 @@ class SiteController extends Controller
                     }
                     break;
                 case 'password':
+
                     $form = Yii::$app->request->post('User');
-                    if(!$model->validate('verifyCode')){
-                        echo '验证码不正确';
-                        die;
-                    }
-                    if (Yii::$app->security->validatePassword($form['password'], $model->password)) {
-                        if ($form['pass1'] === $form['pass2']) {
-                            $model->password = Yii::$app->security->generatePasswordHash($form['pass1']);
-                            if ($model->save()) {
-                                return $this->goBack();
-                            } else {
-                                echo '<pre>';
-                                var_dump($_POST);
-                                //throw new Exception('密码修改失败');
-                            }
+                    if (Yii::$app->security->validatePassword($form['password'], $model->password) && $model->load(Yii::$app->request->post())) {
+                        $model->password = Yii::$app->security->generatePasswordHash($model->password);
+                        $model->password_reset_token = Yii::$app->security->generateRandomString();
+                        $model->changed_password = 1;
+                        if ($model->save()) {
+                            Yii::$app->user->logout();
+                            return $this->goHome();
                         } else {
-                            throw new Exception('确认密码和新密码不一样');
+                            throw new Exception('密码修改失败');
                         }
+
                     } else {
-                        throw new Exception('原密码不正确');
+                        $model->addError('password','密码不正确');
                     }
                     break;
                 default:

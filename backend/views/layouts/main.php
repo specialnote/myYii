@@ -47,10 +47,6 @@ AppAsset::register($this);
         ];
     }
     $leftItems[] = [
-        ['label'=>'我的账户','items'=>[
-            ['label'=>'个人中心','url'=>'/user/index'],
-            ['label'=>'个人设置','url'=>'/user/change'],
-        ]],
         ['label'=>'控制台','items'=>[
             ['label'=>'用户管理','url'=>'/user/index'],
             ['label'=>'分类管理','url'=>'/category/index'],

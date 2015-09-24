@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%category}}".
@@ -153,5 +154,22 @@ class Category extends \yii\db\ActiveRecord
         $category = self::findOne($id);
         if(!$category)return '';
         return $category->name;
+    }
+
+
+    public static function get_category(){
+        $category = self::find()->all();
+        $category_array = ArrayHelper::map($category,'id','name');
+        return $category_array;
+    }
+
+    public static function get_category_result($id){
+        $category = self::find()->all();
+        $category_array = ArrayHelper::map($category,'id','name');
+        if(in_array($id,array_keys($category_array))){
+            return $category_array[$id];
+        }else{
+            return '';
+        }
     }
 }

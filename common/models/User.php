@@ -109,7 +109,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'login' => ['username', 'password'],
             'register' => ['username','password','email','mobile','status','group','changed_password','auth_key','password_reset_token'],
             'change_username'=>['username','verifyCode'],
-            'change_password'=>['password','pass1','pass2','verifyCode'],
+            'change_password'=>['password','pass1','pass2','verifyCode','changed_password','password_reset_token'],
             'create_user'=>['username','password','email','mobile','face','status','group','changed_password','auth_key','password_reset_token'],
             'update_user'=>['username','email','mobile','face','status','group'],
         ];

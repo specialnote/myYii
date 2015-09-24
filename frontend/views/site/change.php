@@ -9,11 +9,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="article-index">
    <div class="col-md-12">
        <ul class="nav nav-tabs">
-           <li role="presentation" <?= ($act == 'username')?'class="active"':''?>><?= Html::a('用户名',['/user/change','act'=>'username']) ?></li>
-           <li role="presentation" <?= ($act == 'password')?'class="active"':''?>><?= Html::a('密码',['/user/change','act'=>'password']) ?></li>
-           <li role="presentation" <?= ($act == 'mobile')?'class="active"':''?>><?= Html::a('手机',['/user/change','act'=>'mobile']) ?></li>
-           <li role="presentation" <?= ($act == 'email')?'class="active"':''?>><?= Html::a('邮箱',['/user/change','act'=>'email']) ?></li>
-           <li role="presentation" <?= ($act == 'face')?'class="active"':''?>><?= Html::a('头像',['/user/change','act'=>'face']) ?></li>
+           <li role="presentation" <?= ($act == 'username')?'class="active"':''?>><?= Html::a('用户名',['/site/change','act'=>'username']) ?></li>
+           <li role="presentation" <?= ($act == 'password')?'class="active"':''?>><?= Html::a('密码',['/site/change','act'=>'password']) ?></li>
+           <li role="presentation" <?= ($act == 'mobile')?'class="active"':''?>><?= Html::a('手机',['/site/change','act'=>'mobile']) ?></li>
+           <li role="presentation" <?= ($act == 'email')?'class="active"':''?>><?= Html::a('邮箱',['/site/change','act'=>'email']) ?></li>
+           <li role="presentation" <?= ($act == 'face')?'class="active"':''?>><?= Html::a('头像',['/site/change','act'=>'face']) ?></li>
        </ul>
    </div>
     <div class="col-md-12">
@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model,'verifyCode')->widget(
                         yii\captcha\Captcha::className(),
                         [
-                            'captchaAction'=>'/user/captcha',
+                            'captchaAction'=>'/site/captcha',
                             'template' => '<div class="row"><div class="col-md-3">{image}</div><div class="col-md-3">{input}</div></div>',
                             'imageOptions'=>['alt'=>'图片无法加载','title'=>'点击换图', 'style'=>'cursor:pointer'],
                         ]
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $form->field($model,'verifyCode')->widget(
                         yii\captcha\Captcha::className(),
                         [
-                            'captchaAction'=>'/user/captcha',
+                            'captchaAction'=>'/site/captcha',
                             'template' => '<div class="row"><div class="col-md-3">{image}</div><div class="col-md-3">{input}</div></div>',
                             'imageOptions'=>['alt'=>'图片无法加载','title'=>'点击换图', 'style'=>'cursor:pointer'],
                         ]

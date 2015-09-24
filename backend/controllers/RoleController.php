@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use common\models\RoleForm;
+use yii\base\Exception;
 
 class RoleController extends BaseController{
     public function actionIndex(){
@@ -64,6 +65,22 @@ class RoleController extends BaseController{
             \Yii::$app->session->setFlash('error','节点['.$name.']删除失败');
         }
         return $this->redirect(['/role/index']);
+    }
+
+    public function actionNode($name){
+        $authManager = \Yii::$app->authManager;
+        $role = $authManager->getRole($name);
+        if(!$role){
+            throw new Exception('节点未找到');
+        }
+        if(\Yii::$app->request->isPost){
+
+        }
+
+        $nodes = $authManager->getRoles();
+        $this->render('node',[
+            'nodes'=>$nodes,
+        ]);
     }
 
 }

@@ -54,9 +54,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template'=>'{view} {update} {delete} {options}',
-                'options'=>['width'=>'75'],
+                'options'=>['width'=>'100'],
                 'buttons'=>[
-                    'options'=>Html::a('权限',['/role/role'])
+                    'options'=>function($url,$model,$key){
+                        return Html::a('权限',['/user/role','id'=>$model->id]);
+                    }
                 ],
             ],
         ],

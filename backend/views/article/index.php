@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use common\models\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ArticleSearch */
@@ -9,9 +9,10 @@ use yii\grid\GridView;
 
 $this->title = '文章';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="article-index">
-    <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php /* echo $this->render('_search', ['model' => $searchModel]); */?>
 
     <p>
         <?= Html::a('新建文章', ['create'], ['class' => 'btn btn-success']) ?>
@@ -19,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-       // 'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             'id',
             [
@@ -29,13 +30,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->cover_img;
                 }
             ],
-            'title',
-           // 'content:ntext',
+            [
+                'attribute'=>'title',
+                'label'=>'文章标题',
+                'format'=>'html',
+                'value'=>function($model){
+                    return '<b>'.$model->title.'</b>';
+                },
+                'headerOptions'=>['width'=>'300px'],
+            ],
             [
                 'attribute'=>'category_id',
+                'label'=>'文章分类',
                 'value'=>function($model){
-                    return \common\models\Category::getCategoryName($model->category_id);
-                }
+                    return \common\models\Category::get_category_result($model->category_id);
+                },
+                'filter'=>\common\models\Category::get_category(),
             ],
              'author',
              'publish_at',
@@ -49,8 +59,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'header'=>'操作',
                 'template'=>'{view} {update} {delete}',
-                'options'=>['width'=>'75'],
+                'headerOptions'=>['width'=>'75'],
             ],
         ],
         'tableOptions'=>['class' => 'table table-striped table-hover']

@@ -64,7 +64,8 @@ class ArticleSearch extends Article
             $query->andFilterWhere(['like', 'author', $this->author]);
         }
         if($this->category_id){
-            $category = Category::find()->where(['like','name',$this->category_id])->all();
+            $query->andFilterWhere(['category_id'=>$this->category_id]);
+            /*$category = Category::find()->where(['like','name',$this->category_id])->all();
             if($category){
                 $ids = [];
                 foreach (($category) as $v) {
@@ -73,7 +74,7 @@ class ArticleSearch extends Article
                 $query->andFilterWhere(['in', 'category_id', $ids]);
             }else{
                 $query->andFilterWhere(['category_id'=>0]);
-            }
+            }*/
 
         }
 

@@ -26,10 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr>
                 <td><?= $v->name?></td>
                 <td><?= $v->description?></td>
-                <td style="width: 60px;">
-                    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>',['/role/update','name'=>$v->name])?>
+                <td style="width: 140px;">
+                    <?= Html::a('修改',['/role/update','name'=>$v->name])?>
                     &nbsp;
-                    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>',['/role/delete','name'=>$v->name],[
+                    <?= Html::a('权限',['/role/node','name'=>$v->name])?>
+                    &nbsp;
+                    <?= Html::a('删除',['/role/delete','name'=>$v->name],[
                         'data' => [
                             'confirm' => '确认删除吗？',
                             'method' => 'post',

@@ -29,12 +29,12 @@ class LoginForm extends Model
             [['username', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
+            //验证码
+            ['verifyCode', 'captcha'],
             //验证用户名
             ['username','validateUsername','params'=>Yii::$app->params['regex.username']],
             // password is validated by validatePassword()
             ['password', 'validatePassword','params'=>Yii::$app->params['regex.password']],
-            //验证码
-            ['verifyCode', 'captcha'],
         ];
     }
 
