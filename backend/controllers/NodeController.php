@@ -18,7 +18,6 @@ class NodeController extends BaseController{
         $model = new NodeForm();
 
         if($model->load(\Yii::$app->request->post()) && $model->save()){
-
             \Yii::$app->session->setFlash('success','节点['.$model->name.']添加成功');
             return $this->redirect(['/node/index']);
         }else{

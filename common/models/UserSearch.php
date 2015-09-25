@@ -45,6 +45,9 @@ class UserSearch extends User
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pagesize' => '20',
+             ],
         ]);
 
         $this->load($params);

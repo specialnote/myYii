@@ -30,6 +30,7 @@ function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken)
                 if(result.code == 0){
                     $('#'+buttonId).html('<img src="'+result.path+'" height="50" />');
                     $('#hidden_input').val(result.path);
+                    console.log(result.message);
                 }
             },
             Error: function(up, err) {

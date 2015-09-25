@@ -6,53 +6,68 @@ use yii\base\Exception;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
-class FileUpload extends \yii\base\Object
+class ImageUpload extends \yii\base\Object
 {
-    public $fileInputName = 'file';
-    public $savePath ;
-    public $allowExt = ['jpg','png','jpeg','gif'];
-    public $maxFileSize=1024100000;
-    public $extension;
-    public $baseName;
-    public $fileSize;
-    public $urlPath;
+    public $fileInputName = 'file';//上传表单 file name
+    public $savePath ;//图像保存根位置
+    public $allowExt = ['jpg','png','jpeg','gif','bmp'];//允许上传后缀
+    public $maxFileSize=1024100000;//最大大小
 
-    private $_uploadFile;
-    private $_path;
-    private $_name;
-    private $filePath;
+    private $allowType = ['image/jpeg','image/bmp','image/gif','image/png','image/pjpeg','image/bmp','image/gif','image/x-png','image/pjpeg','image/bmp', 'image/gif' ,'image/x-png','image/pjpeg','image/bmp','image/gif','image/x-png'];
+    private $_uploadFile;//上传文件
+    private $_path;//生成路径
+    private $_name;//生成名字
+    private $filePath;//文件路径
+    private $baseName;//上传文件去除后缀名字
+    private $fileSize;//上传文件大小
+    private $urlPath;//访问路径
+    private $res=false;
+    private $message;
 
-
+    public function getMessage(){
+        return $this->message;
+    }
+    public function getUrlPath(){
+        return $this->urlPath;
+    }
 
     public function init(){
-        if(!$this->fileInputName){
-            throw new Exception('fileInputName属性不能为空');
-        }
-        if(!$this->savePath){
-            $this->savePath = \Yii::$app->basePath.'/web/uploads/images';
-        }
-        if(!file_exists(rtrim($this->savePath,'/'))){
-            FileHelper::createDirectory($this->savePath);
+        if(!$this->fileInputName) throw new Exception('fileInputName属性不能为空');
+
+        if(!$this->savePath) $this->savePath = \Yii::$app->basePath.'/web/uploads/images';
+        $this->savePath = rtrim($this->savePath,'/');
+        if(!file_exists($this->savePath)){
+            if(! FileHelper::createDirectory($this->savePath)){
+                $this->message = '没有权限创建'.$this->savePath;
+                return false;
+            }
         }
 
         $this->_uploadFile = UploadedFile::getInstanceByName($this->fileInputName);
-
         if(!$this->_uploadFile){
-            throw new Exception('not has upload file');
+            $this->message = '没有找到上传文件';
+            return false;
         }
-
         if($this->_uploadFile->error){
-            throw new Exception('upload failed');
+            $this->message = '上传失败';
+            return false;
         }
 
-        $this->extension = $this->_uploadFile->extension;
-        if(!in_array($this->extension,$this->allowExt)){
-            throw new Exception('the extension of file is not allowed');
+        file_put_contents('1111.txt',$this->_uploadFile->type);
+        if(!in_array($this->_uploadFile->extension,$this->allowExt)){
+            $this->message = '该文件类型不允许上传';
+            return false;
         }
+        if(!in_array($this->_uploadFile->type,$this->allowType)){
+            $this->message = '该文件类型不允许上传';
+            return false;
+        }
+
 
         $this->fileSize = $this->_uploadFile->size;
         if($this->fileSize > $this->maxFileSize){
-            throw new Exception('the file is out of maxFileSize');
+            $this->message = '文件过大';
+            return false;
         }
 
         if(!$this->_path){
@@ -64,18 +79,24 @@ class FileUpload extends \yii\base\Object
         }
 
         $this->baseName = $this->_uploadFile->baseName;
-        $this->_name = \Yii::$app->security->generateRandomString();
-        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->extension;
-        $this->urlPath = '/uploads/images/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->extension;
+        $this->_name = substr(\Yii::$app->security->generateRandomString(),-4,4);
+        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
+        $this->urlPath = '/uploads/images/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
     }
 
     public function save(){
         if($this->_uploadFile->saveAs($this->filePath)){
             $this->CreateThumbnail($this->filePath);
-            return true;
+            $this->res = true;
         }else{
-            return false;
+            $this->res = false;
         }
+        if($this->res){
+            $this->message = $this->baseName.'.'.$this->_uploadFile->extension.'上传成功';
+        }else{
+            $this->message = $this->baseName.'.'.$this->_uploadFile->extension.'上传失败';
+        }
+        return $this->res;
     }
 
 
@@ -141,11 +162,23 @@ class FileUpload extends \yii\base\Object
             $ni = imagecreate($ftoW, $ftoH);
             imagecopyresized($ni, $im, 0, 0, 0, 0, $ftoW, $ftoH, $srcW, $srcH);
         }
-
         //保存到文件 统一为.png格式
-        imagepng($ni, $toFile); //以 PNG 格式将图像输出到浏览器或文件
+        //imagepng($ni, $toFile); //以 PNG 格式将图像输出到浏览器或文件
+
+        switch ($data[2]) //1-GIF，2-JPG，3-PNG
+        {
+            case 1:
+                imagegif($ni, $toFile);
+                break;
+            case 2:
+                imagejpeg($ni, $toFile);
+                break;
+            case 3:
+                imagepng($ni, $toFile);
+                break;
+        }
         ImageDestroy($ni);
         ImageDestroy($im);
-        return true;
+        return $toFile;
     }
 }

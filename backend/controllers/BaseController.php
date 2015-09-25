@@ -65,7 +65,7 @@ class BaseController extends Controller
                     Yii::$app->user->logout();
                     throw new ForbiddenHttpException('普通用户无权访问');
                 }
-                
+
                 //为改密码(待修改)
                 if(!Yii::$app->user->identity->changed_password){
                     throw new Exception('请更改密码');
