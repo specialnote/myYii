@@ -26,6 +26,19 @@ class ArticleController extends BaseController
         ];
     }
 
+    public function actions()
+    {
+        return [
+            'upload' => [
+                'class' => 'kucha\ueditor\UEditorAction',
+                'config' => [
+                    "imageUrlPrefix"  => "",//图片访问路径前缀
+                    "imagePathFormat" => "/uploads/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}" //上传保存路径
+                ],
+            ]
+        ];
+    }
+
     /**
      * Lists all Article models.
      * @return mixed
@@ -61,14 +74,13 @@ class ArticleController extends BaseController
     public function actionCreate()
     {
         $model = new Article();
-
+        $model->status = Article::STATUS_DISPLAY;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
