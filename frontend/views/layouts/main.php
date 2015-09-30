@@ -44,6 +44,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => '账户设置', 'url' => ['/site/change']];
+        $menuItems[] = ['label' => '个人中心', 'url' => ['/user/index']];
         $menuItems[] = [
             'label' => '退出 (' . Yii::$app->user->identity->username . ')',
             'url' => ['/site/logout'],

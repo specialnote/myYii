@@ -21,36 +21,6 @@ use frontend\models\LoginForm;
  */
 class SiteController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * @inheritdoc
@@ -238,13 +208,12 @@ class SiteController extends Controller
             switch($change) {
                 case 'username':
                     if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                        return $this->goBack();
+                        return $this->redirect(['/site/change','act'=>$act]);
                     } else {
                         throw new Exception('用户名修改失败');
                     }
                     break;
                 case 'password':
-
                     $form = Yii::$app->request->post('User');
                     if (Yii::$app->security->validatePassword($form['password'], $model->password) && $model->load(Yii::$app->request->post())) {
                         $model->password = Yii::$app->security->generatePasswordHash($model->password);
@@ -261,6 +230,13 @@ class SiteController extends Controller
                         $model->addError('password','密码不正确');
                     }
                     break;
+                case 'email':
+                    if($model->load(Yii::$app->request->post()) && $model->save()){
+                        return $this->redirect(['/site/change','act'=>$act]);
+                    } else {
+                        throw new Exception('邮箱修改失败');
+                    }
+                    break;
                 default:
                     break;
             }
@@ -272,18 +248,6 @@ class SiteController extends Controller
 
     }
 
-    public function actionMail(){
-        $mail= Yii::$app->mailer->compose();
-        $mail->setTo('1173200235@qq.com');
-        $mail->setSubject("邮件测试");
-        //$mail->setTextBody('zheshisha ');   //发布纯文字文本
-        $mail->setHtmlBody("<b>问我我我我我</b>");    //发布可以带html标签的文本
-        if($mail->send())
-            echo "success";
-        else
-            echo "failse";
-        die();
-    }
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

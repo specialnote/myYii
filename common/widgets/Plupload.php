@@ -12,6 +12,7 @@ class Plupload extends yii\bootstrap\Widget{
     public $attribute;
     public $name;
 	public $url;
+    public $path='';//域名
 
     private $_html;
 
@@ -40,7 +41,7 @@ class Plupload extends yii\bootstrap\Widget{
         UploadAsset::register($this->view);
 		$this->view->registerJs(
 			'$(function(){
-                initCoverImageUploader("pickfiles","container","2mb","'.$this->url.'","'.Yii::$app->request->getCsrfToken().'");
+                initCoverImageUploader("pickfiles","container","2mb","'.$this->url.'","'.Yii::$app->request->getCsrfToken().'","'.$this->path.'");
             });'
 		);
 

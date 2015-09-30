@@ -1,10 +1,10 @@
-function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken){
+function initCoverImageUploader(buttonId,contatinerId,maxFileSize,url,csrfToken,pathPre){
 
     var uploader = new plupload.Uploader({
         runtimes : 'html5,flash,silverlight,html4',
         browse_button :buttonId, // you can pass an id...
         container: contatinerId, // ... or DOM Element itself
-        url : url,
+        url : url+'?path='+pathPre,
         flash_swf_url : '@vendor/moxiecode/plupload/js/Moxie.swf',
         silverlight_xap_url : '@vendor/moxiecode/plupload//js/Moxie.xap',
 

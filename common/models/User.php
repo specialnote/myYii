@@ -32,10 +32,15 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
 
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-
+    #分组
     const GROUP_READER = 10;
     const GROUP_WRITER = 20;
     const GROUP_ADMIN  = 30;
+    #手机、邮箱是否通过验证
+    const IS_MOBILE_TRUE = 20;
+    const IS_MOBILE_FALSE = 10;
+    const IS_EMAIL_FALSE = 10;
+    const IS_EMAIL_TRUE = 20;
 
     /**
      * @inheritdoc
@@ -60,7 +65,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     {
         return [
             [['username', 'mobile', 'email', 'created_at', 'updated_at'], 'required'],
-            [['changed_password', 'status', 'created_at', 'updated_at', 'group'], 'integer'],
+            [['changed_password', 'status', 'created_at', 'updated_at', 'group','is_mobile','is_email'], 'integer'],
             [['last_login_time'], 'safe'],
             [['password_reset_token'], 'unique'],
             [['auth_key', 'email'], 'string', 'max' => 32],
@@ -110,6 +115,8 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'register' => ['username','password','email','mobile','status','group','changed_password','auth_key','password_reset_token'],
             'change_username'=>['username','verifyCode'],
             'change_password'=>['password','pass1','pass2','verifyCode','changed_password','password_reset_token'],
+            'change_email'=>['email','verifyCode'],
+            'change_mobile'=>['mobile','verifyCode'],
             'create_user'=>['username','password','email','mobile','face','status','group','changed_password','auth_key','password_reset_token'],
             'update_user'=>['username','email','mobile','face','status','group'],
         ];
@@ -134,6 +141,8 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'updated_at' => 'Updated At',
             'group' => '分组',
             'mobile' => '手机',
+            'is_mobile'=>'手机是否验证',
+            'is_email'=>'邮箱是否验证',
 
             'verifyCode'=>'验证码',
             'pass1'=>'新密码',
@@ -318,6 +327,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             case 'mobile':
                 break;
             case 'email':
+                $this->setScenario('change_email');
                 break;
             case 'password':
                 $this->setScenario('change_password');

@@ -25,7 +25,8 @@ use common\models\User;
             <?= \common\widgets\Plupload::widget([
                 'model'=>$model,
                 'attribute'=>'face',
-                'url'=>'/file/upload'
+                'url'=>'/file/upload',
+                'path'=>Yii::$app->request->hostInfo,
             ])?>
             <?= $form->field($model, 'status')->radioList([User::STATUS_ACTIVE=>'可用',User::SCENARIO_DEFAULT=>'禁用']) ?>
             <?= $form->field($model, 'group')->radioList([User::GROUP_READER=>'普通用户',User::GROUP_WRITER=>'作者',User::GROUP_ADMIN=>'管理员'])?>

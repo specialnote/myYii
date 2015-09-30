@@ -12,6 +12,7 @@ class ImageUpload extends \yii\base\Object
     public $savePath ;//图像保存根位置
     public $allowExt = ['jpg','png','jpeg','gif','bmp'];//允许上传后缀
     public $maxFileSize=1024100000;//最大大小
+    public $url;//图片域名
 
     private $allowType = ['image/jpeg','image/bmp','image/gif','image/png','image/pjpeg','image/bmp','image/gif','image/x-png','image/pjpeg','image/bmp', 'image/gif' ,'image/x-png','image/pjpeg','image/bmp','image/gif','image/x-png'];
     private $_uploadFile;//上传文件
@@ -53,7 +54,6 @@ class ImageUpload extends \yii\base\Object
             return false;
         }
 
-        file_put_contents('1111.txt',$this->_uploadFile->type);
         if(!in_array($this->_uploadFile->extension,$this->allowExt)){
             $this->message = '该文件类型不允许上传';
             return false;
@@ -80,11 +80,12 @@ class ImageUpload extends \yii\base\Object
 
         $this->baseName = $this->_uploadFile->baseName;
         $this->_name = substr(\Yii::$app->security->generateRandomString(),-4,4);
-        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
-        $this->urlPath = '/uploads/images/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
     }
 
     public function save(){
+        $this->filePath = $this->savePath.'/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
+        $this->urlPath = $this->url.'/uploads/images/'.$this->_path.'/'.$this->baseName.'--'.$this->_name.'.'.$this->_uploadFile->extension;
+
         if($this->_uploadFile->saveAs($this->filePath)){
             $this->CreateThumbnail($this->filePath);
             $this->res = true;
@@ -109,7 +110,7 @@ class ImageUpload extends \yii\base\Object
      * $toFile      缩略图文件名称，为空覆盖原图像文件
      * @return bool
      */
-    public static function CreateThumbnail($srcFile, $toFile="", $toW=100, $toH=100)
+    private  function CreateThumbnail($srcFile, $toFile="", $toW=100, $toH=100)
     {
         if ($toFile == "") {
             $toFile = $srcFile;

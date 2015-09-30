@@ -15,9 +15,11 @@ use Yii;
 class FileController extends BaseController
 {
     public function actionUpload(){
+        $path = Yii::$app->request->get('path');
         Yii::$app->response->format=Response::FORMAT_JSON;
         $model = New ImageUpload();
         $model->fileInputName = 'file';
+        $model->url =$path;
         if($model->save()){
             return ['code'=>0,'message'=>$model->getMessage(),'path'=>$model->getUrlPath()];
         }else{

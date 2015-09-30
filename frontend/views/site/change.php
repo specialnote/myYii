@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 break;
             case 'password':
     ?>
-                <?php $form = ActiveForm::begin(['id'=>'user_change_form'])?>
+                <?php $form = ActiveForm::begin(['id'=>'password_change_form'])?>
                 <div class="col-md-6">
                     <?= Html::hiddenInput('change','password')?>
                     <?= $form->field($model,'password')->passwordInput(['value'=>''])?>
@@ -71,6 +71,29 @@ $this->params['breadcrumbs'][] = $this->title;
             case 'mobile':
                 break;
             case 'email':
+    ?>
+                <div class="row">
+                    <?php $form = ActiveForm::begin(['id'=>'email-change-form'])?>
+                    <div class="col-md-6">
+                        <?= Html::hiddenInput('change','email')?>
+                        <?= $form->field($model,'email')->textInput(['value'=>$model->email])?>
+                    </div>
+                    <div class="col-md-7">
+                        <?= $form->field($model,'verifyCode')->widget(
+                            yii\captcha\Captcha::className(),
+                            [
+                                'captchaAction'=>'/site/captcha',
+                                'template' => '<div class="row"><div class="col-md-3">{image}</div><div class="col-md-3">{input}</div></div>',
+                                'imageOptions'=>['alt'=>'图片无法加载','title'=>'点击换图', 'style'=>'cursor:pointer'],
+                            ]
+                        );?>
+                        <div class="form-group">
+                            <?= Html::submitButton('更 改',['class'=>'btn btn-primary'])?>
+                        </div>
+                    </div>
+                    <?php ActiveForm::end()?>
+                </div>
+    <?php
                 break;
             case 'face':
                 break;
