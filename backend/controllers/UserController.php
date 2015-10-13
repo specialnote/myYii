@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\User;
 use common\models\UserSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -125,8 +126,31 @@ class UserController extends BaseController
         }
     }
 
-    public function actionRole(){
-
+    #为用户选择角色
+    public function actionRole($id){
+        $user = User::findOne($id);
+        if(!$user) throw new NotFoundHttpException('用户未找到');
+        $authManager = Yii::$app->authManager;
+        if(Yii::$app->request->isPost){
+            $roleNames=Yii::$app->request->post('roles');
+            $authManager->revokeAll($id);
+            if(!empty($roleNames)&&is_array($roleNames)){
+                foreach($roleNames as $roleName){
+                    $role=$authManager->getRole($roleName);
+                    if(!$role){
+                        continue;
+                    }
+                    $authManager->assign($role,$id);
+                }
+            }
+            Yii::$app->session->setFlash('success','更新成功');
+            $this->redirect(['role','id'=>$id]);
+        }else{
+            $userRoles=$authManager->getRolesByUser($id);
+            $roleNames=ArrayHelper::getColumn(ArrayHelper::toArray($userRoles),'name');
+            $roles=$authManager->getRoles();
+            return $this->render('role',['roles'=>$roles,'roleNames'=>$roleNames]);
+        }
     }
 
 }

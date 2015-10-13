@@ -3,10 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\Html;
 
-class NodeForm extends ActiveRecord
+class NodeForm extends Model
 {
     public $name;
     public $description;
