@@ -55,7 +55,6 @@ class Article extends \yii\db\ActiveRecord
             [['title'], 'string', 'max' => 100],
             [['category_id'], 'string', 'max' => 10],
             [['author'], 'string', 'max' => 30],
-          //  ['cover_img','validateImg'],
             ['author','filter','filter'=>function($value){
                 return $value?$value:Yii::$app->user->identity->username;
             }],
@@ -99,24 +98,15 @@ class Article extends \yii\db\ActiveRecord
             return '';
         }
     }
-   /* public function validateImg($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $file = \Yii::$app->basePath.'/web/'.ltrim($this->cover_img,'/');
 
-            if(is_file($file)){
-                $extension = pathinfo($file,PATHINFO_EXTENSION);
-                if(!in_array($extension,['jpg','png','jpeg','bmp','gif'])){
-                    $this->addError($attribute,'文件后缀不合法');
-                }
-            }else{
-                $this->addError($attribute,'文件不存在');
-            }
-        }
-    }*/
-    /*public function beforeSave($insert){
-        if(parent::beforeSave($insert)){
-            $this->publish_at = strtotime($this->publish_at);
-        }
-    }*/
+   public static function getRecommendArticle(){
+       $articles = self::find()
+           ->where(['status'=>self::STATUS_DISPLAY])
+           ->orderBy(['share'=>SORT_DESC,'publish_at'=>SORT_DESC])
+           ->limit(10)
+           ->all();
+
+       return $articles;
+   }
+
 }
