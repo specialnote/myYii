@@ -75,12 +75,14 @@ class ArticleController extends BaseController
     {
         $model = new Article();
         $model->status = Article::STATUS_DISPLAY;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveArticle()) {
             return $this->redirect(['view', 'id' => $model->id]);
+        }else{
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+
     }
 
     /**
@@ -92,7 +94,8 @@ class ArticleController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $tags = $model->getArticleTag();
+        var_dump($tags);die;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

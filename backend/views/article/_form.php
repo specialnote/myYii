@@ -140,6 +140,7 @@ use kucha\ueditor\UEditor;
 
         <?= $form->field($model, 'status')->radioList([Article::STATUS_DISPLAY=>'可用',Article::STATUS_HIDDEN=>'禁用']) ?>
 
+        <?= Html::activeLabel($model,'publish_at') ?>
         <?= DatePicker::widget([
             'model' => $model,
             'attribute' => 'publish_at',
@@ -151,7 +152,11 @@ use kucha\ueditor\UEditor;
                 'weekStart'=>'1',
             ]
         ]);?>
+        <?php if($model->isNewRecord ): ?>
+        <?= $form->field($model,'tag')->textInput()->hint('多个标签用;隔开') ?>
+        <?php else: ?>
 
+        <?php endif; ?>
     </div>
     <div class="form-group col-md-12">
         <?= Html::submitButton($model->isNewRecord ? '新建' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

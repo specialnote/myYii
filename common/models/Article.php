@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Exception;
+use yii\db\Query;
 use yii\helpers\FileHelper;
 use yii\helpers\HtmlPurifier;
 use yii\behaviors\TimestampBehavior;
@@ -26,6 +28,8 @@ class Article extends \yii\db\ActiveRecord
 {
     const STATUS_DISPLAY = 10;
     const STATUS_HIDDEN = 20;
+
+    public $tag;
     /**
      * @inheritdoc
      */
@@ -34,6 +38,7 @@ class Article extends \yii\db\ActiveRecord
         return '{{%article}}';
     }
     /**
+     * 可以自动补全 created_at 和 updated_at
      * @inheritdoc
      */
     public function behaviors()
@@ -48,20 +53,25 @@ class Article extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'category_id', 'publish_at'], 'required'],
-            [['content','cover_img','publish_at','author'], 'string'],
+            [['title', 'content', 'category_id'], 'required'],
+            [['content','cover_img','publish_at','author','tag'], 'string'],
             [['status', 'view_count', 'share', 'created_at', 'updated_at'], 'integer'],
 
             [['title'], 'string', 'max' => 100],
             [['category_id'], 'string', 'max' => 10],
             [['author'], 'string', 'max' => 30],
-            ['author','filter','filter'=>function($value){
-                return $value?$value:Yii::$app->user->identity->username;
-            }],
 
+            ['author','filter','filter'=>function($value){
+                return $value?:Yii::$app->user->identity->username;
+            }],
             [['content'], 'filter','filter'=>function($value){
                 return HtmlPurifier::process($value);
             }],
+            ['publish_at','filter','filter'=>function($value){
+                return $value?:date('Y-m-d',time());
+            }],
+
+            ['tag','match','pattern'=>Yii::$app->params['regex.tag'],'message'=>'标签不合法']
         ];
     }
 
@@ -83,7 +93,37 @@ class Article extends \yii\db\ActiveRecord
             'publish_at' => '发布时间',
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
+            'tag'=>'标签',
         ];
+    }
+
+    public function saveArticle(){
+        if(!$this->validate()) return false;
+        if(!$this->tag)return $this->save();
+
+       try{
+           $tags = explode(';',$this->tag);
+           foreach($tags as $v){
+               $tag = Tag::findOne(['name'=>$v]);
+               if(!$tag){
+                   $tag = new Tag();
+                   $tag->name = $v;
+                   $tag->article_count=0;
+                   $tag->save();
+               }
+               $article_tag = new ArticleTag();
+               $article_tag->article_id = $this->id;
+               $article_tag->tag_id = $tag->id;
+               $article_tag->save(false);
+               //更前标签的文章数量
+               $tag->article_count++;
+               $tag->save(false);
+
+           }
+       }catch (Exception $e){
+           throw new Exception($e->getMessage());
+       }
+        return $this->save();
     }
 
     /*
@@ -99,6 +139,10 @@ class Article extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * 获取推荐文章
+     * @return array|\yii\db\ActiveRecord[]
+     */
    public static function getRecommendArticle(){
        $articles = self::find()
            ->where(['status'=>self::STATUS_DISPLAY])
@@ -108,5 +152,21 @@ class Article extends \yii\db\ActiveRecord
 
        return $articles;
    }
+
+    /**
+     * 获取文章标签
+     * @return array
+     */
+    public function getArticleTag(){
+        $query = new Query();
+        $tags = $query->select('t.id,t.name,t.article_count')
+            ->from('{{%tag}} as t')
+            ->innerJoin('{{%article_tag}} as at','t.id = at.tag_id')
+            ->innerJoin('{{%article}} as a','a.id = at.article_id')
+            ->where(['a.id'=>$this->id])
+            ->all();
+
+        return $tags;
+    }
 
 }

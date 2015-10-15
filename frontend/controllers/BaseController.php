@@ -24,7 +24,7 @@ class BaseController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error','captcha'],
+                        'actions' => ['index','login', 'error','captcha'],
                         'allow' => true,
                     ],
                     [

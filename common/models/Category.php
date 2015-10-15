@@ -108,17 +108,6 @@ class Category extends \yii\db\ActiveRecord
         return $list;
     }
 
-
-  /* public  function beforeSave($insert)
-    {
-        if(parent::beforeSave($insert)){
-            $this->parent = $this->parent?$this->parent:0;
-            return true;
-        }else{
-            return false;
-        }
-    }*/
-
     /*
      * 获取父类名称
      * @param int|null $id
@@ -156,13 +145,19 @@ class Category extends \yii\db\ActiveRecord
         return $category->name;
     }
 
-
+    /**
+     * @return array
+     */
     public static function get_category(){
         $category = self::find()->all();
         $category_array = ArrayHelper::map($category,'id','name');
         return $category_array;
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public static function get_category_result($id){
         $category = self::find()->all();
         $category_array = ArrayHelper::map($category,'id','name');

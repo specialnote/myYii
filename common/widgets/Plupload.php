@@ -32,7 +32,7 @@ class Plupload extends yii\bootstrap\Widget{
     public function run(){
         $model = $this->model;
         $attribute = $this->attribute;
-        $path = $model->$attribute?$model->$attribute:"/images/noimage.gif";
+        $path = $model->$attribute?:$this->path."/images/noimage.gif";
         $this->_html.='<div class="form-group field-article-author" id="container">';
         $this->_html.=Html::activeLabel($model,$attribute);
         $this->_html.=Html::activeHiddenInput($model,$attribute,['id'=>'hidden_input','value'=>$path]);
