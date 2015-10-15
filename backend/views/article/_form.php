@@ -152,10 +152,17 @@ use kucha\ueditor\UEditor;
                 'weekStart'=>'1',
             ]
         ]);?>
-        <?php if($model->isNewRecord ): ?>
+        <?php if(Yii::$app->controller->action->id == 'create'): ?>
         <?= $form->field($model,'tag')->textInput()->hint('多个标签用;隔开') ?>
         <?php else: ?>
-
+            <?= Html::activeLabel($model,'tag')?>
+            <?php
+                $str = '';
+                foreach($tags as $tag){
+                    $str.=$tag['name'].';';
+                }
+                echo Html::activeTextInput($model,'tag',['value'=>$str,'disabled'=>true])
+            ?>
         <?php endif; ?>
     </div>
     <div class="form-group col-md-12">

@@ -95,12 +95,12 @@ class ArticleController extends BaseController
     {
         $model = $this->findModel($id);
         $tags = $model->getArticleTag();
-        var_dump($tags);die;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'tags'  =>$tags,
             ]);
         }
     }

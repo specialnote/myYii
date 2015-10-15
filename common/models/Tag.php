@@ -30,7 +30,7 @@ class Tag extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'article_count', 'created_at', 'updated_at'], 'required'],
+            [['name', 'article_count'], 'required'],
             [['article_count', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 20]
         ];

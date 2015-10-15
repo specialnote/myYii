@@ -97,33 +97,41 @@ class Article extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * 新建文章
+     * @return bool
+     * @throws Exception
+     */
     public function saveArticle(){
         if(!$this->validate()) return false;
         if(!$this->tag)return $this->save();
-
+        $res = $this->save();
        try{
            $tags = explode(';',$this->tag);
            foreach($tags as $v){
+               if(!$v)continue;
                $tag = Tag::findOne(['name'=>$v]);
                if(!$tag){
                    $tag = new Tag();
                    $tag->name = $v;
                    $tag->article_count=0;
-                   $tag->save();
+                   $res = $tag->save();
+                   $id = $tag->id;
+               }else{
+                   $id = $tag->id;
                }
                $article_tag = new ArticleTag();
                $article_tag->article_id = $this->id;
-               $article_tag->tag_id = $tag->id;
-               $article_tag->save(false);
+               $article_tag->tag_id = $id;
+               $article_tag->save();
                //更前标签的文章数量
                $tag->article_count++;
                $tag->save(false);
-
            }
        }catch (Exception $e){
            throw new Exception($e->getMessage());
        }
-        return $this->save();
+        return $res;
     }
 
     /*
