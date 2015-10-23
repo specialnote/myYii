@@ -3,46 +3,63 @@
     use yii\helpers\Url;
     $this->registerCss(
         <<<CSS
-        dt{float: left;margin-right: 20px;width: 50px;}
+        .article-title{font-size: 18px;margin: 0px;}
+         .panel .panel-heading {
+            background: #FCFCFC;
+            border-bottom: #eee solid 1px;
+         }
 CSS
 
     );
 ?>
-<div class="row col-md-10">
-    <div class="row">
-        <h2>文章列表</h2>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-           <?php foreach($articles as $article): ?>
-               <a href="<?= Url::to(['/article/detail','id'=>$article->id]) ?>">
-                   <dl>
-                       <dt>
-                           <img src="<?= $article->cover_img ?>" width="50px">
-                       </dt>
-                       <dd>
-                           <h3><?=  $article->title?></h3>
-                           <span><?= $article->author ?></span>
-                           <span><?= $article->view_count ?></span>
-                           <span><?= $article->publish_at ?></span>
-                       </dd>
-                   </dl>
-               </a>
-            <?php endforeach;?>
+
+<div class="row">
+    <div class="col-md-9 col-lg-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">文章列表</h2>
+            </div>
+            <div class="panel-body">
+                <ul class="media-list">
+                    <?php foreach($articles as $article): ?>
+                        <li class="media">
+                            <div class="media-body">
+                                <div class="media-heading">
+                                    <h3 class="article-title">
+                                        <span class="glyphicon glyphicon-list-alt"></span>
+                                        <a href="<?= Url::to(['/article/detail','id'=>$article->id]) ?>">
+                                            <?=  $article->title?>
+                                        </a>
+                                    </h3>
+                                </div>
+                               <div class="media-action">
+                                   <span><?= $article->publish_at ?></span>
+                               </div>
+                            </div>
+                            <div class="media-right">
+                                <span><?= $article->view_count ?></span>
+                            </div>
+                        </li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-4">
-            <?php foreach($recommendArticles as $k=>$article): ?>
-                <div class="row">
-                    <a href="<?= Url::to(['/article/detail','id'=>$article->id]) ?>">
-                        <div class="col-md-2">
+    </div>
+    <div class="col-md-3 col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="feature">
+                    <?php foreach($recommendArticles as $k=>$article): ?>
+                        <div class="span2">
                             <?= $k+1 ?>
                         </div>
-                        <div class="col-md-8">
-                            <?= $article->title ?>
+                        <div class="span10">
+                            <a href="<?= Url::to(['/article/detail','id'=>$article->id]) ?>"><?= $article->title ?> </a>
                         </div>
-                    </a>
+                    <?php endforeach;?>
                 </div>
-            <?php endforeach;?>
+            </div>
         </div>
     </div>
+
 </div>
