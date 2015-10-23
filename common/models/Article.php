@@ -177,4 +177,15 @@ class Article extends \yii\db\ActiveRecord
         return $tags;
     }
 
+    public function getRelativeArticles(){
+        //获取当前分类最新10条，阅读量最多10条
+        $category_id = $this->category_id;
+
+        $tags = $this->getArticleTag();
+        $tag_id = [];
+        foreach($tags as $tag){
+            $tag_id[] = $tag['id'];
+        }
+    }
+
 }

@@ -47,17 +47,17 @@ class BaseController extends Controller
             $controllerId = $action->controller->id;
             $actionId = $action->id;
 
-            $node = $controllerId.'_'.$actionId;
+            $node = $controllerId.'_'.$actionId;//拼装权限节点
             //未登录
             if(Yii::$app->user->isGuest){
-                if(!in_array($node,['site_login','site_register','site_index','site_captcha'])){
-                    throw new ForbiddenHttpException('未登录用户无权访问');
+                if(!in_array($node,['site_login','site_register','site_index','site_captcha','site_error'])){
+                    return $this->goHome();
                 }else{
                     return true;
                 }
             }else{
-                //都可以访问
-                if(in_array($node,['site_login','site_register','site_index','site_captcha','site_logout'])){
+                //都可以访问,不用验证权限
+                if(in_array($node,['site_login','site_register','site_index','site_captcha','site_logout','site_error'])){
                     return true;
                 }
                 //非作者、管理员不能登录后台
@@ -66,9 +66,9 @@ class BaseController extends Controller
                     throw new ForbiddenHttpException('普通用户无权访问');
                 }
 
-                //为改密码(待修改)
+                //未改密码(待修改)
                 if(!Yii::$app->user->identity->changed_password){
-                    throw new Exception('请更改密码');
+                    throw new Exception('请更改密码');//之后要做修改密码操作
                 }
 
                 //超级管理员(待修改)
@@ -81,7 +81,6 @@ class BaseController extends Controller
                 }else{
                     throw new ForbiddenHttpException('无权访问');
                 }
-
             }
         }else{
             return false;

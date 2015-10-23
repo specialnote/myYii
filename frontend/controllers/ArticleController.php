@@ -26,8 +26,13 @@
 
             //文章标签
             $tags = $article->getArticleTag();
+            //相关文章
 
-            var_dump($tags);
+
+            return $this->render('detail',[
+                'article'=>$article,
+                'tags'=>$tags
+            ]);
         }
     }
 ?>
