@@ -7,7 +7,7 @@
 
     class ArticleController extends BaseController{
         public function actionIndex(){
-            $data = Article::find()->where(['status'=>Article::STATUS_DISPLAY])->orderBy(['created_at'=>SORT_DESC]);
+            $data = Article::find()->where(['status'=>Article::STATUS_DISPLAY])->orderBy(['publish_at'=>SORT_DESC]);
             $pages = new Pagination(['totalCount'=>$data->count(),'pageSize'=>20]);
 
             //全部文章
