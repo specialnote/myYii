@@ -13,11 +13,12 @@ class m151026_065335_gather extends Migration
         }
         $this->createTable('{{%gather}}', [
             'id' => $this->primaryKey(),
-            'url' => $this->string(32)->notNull(),
+            'name'=>$this->string(50),
+            'category' => $this->string(50),
             'url_org' => $this->string(100)->notNull()->defaultValue(''),
-            'category' => $this->string(50)->notNull(),
-            'res' => $this->integer(5)->notNull()->defaultValue(0),
-            'result' => $this->text()->notNull()->defaultValue(''),
+            'url' => $this->string(32)->notNull(),
+            'res' => $this->integer(5)->notNull(),
+            'result' => $this->text()->notNull(),
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
         ], $tableOptions);

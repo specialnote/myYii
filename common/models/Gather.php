@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%gather}}".
@@ -32,12 +33,11 @@ class Gather extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['url', 'category_id', 'result', 'created_at', 'updated_at'], 'required'],
+            [['url','res','result'], 'required'],
             [['res', 'created_at', 'updated_at'], 'integer'],
-            [['result'], 'string'],
+            [['result','category','name'], 'string'],
             [['url'], 'string', 'max' => 32],
             [['url_org'], 'string', 'max' => 100],
-            [['category_id'], 'string', 'max' => 10]
         ];
     }
 
@@ -55,6 +55,16 @@ class Gather extends \yii\db\ActiveRecord
             'result' => 'Result',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 }

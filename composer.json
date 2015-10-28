@@ -27,7 +27,8 @@
         "2amigos/yii2-date-picker-widget":"*",
         "moxiecode/plupload":"*",
         "kucha/ueditor": "*",
-        "fabpot/goutte":"*"
+        "fabpot/goutte":"*",
+        "chrisboulton/php-resque": "1.2.x"
     },
     "config": {
         "process-timeout": 1800

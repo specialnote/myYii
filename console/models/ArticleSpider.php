@@ -2,6 +2,7 @@
     namespace console\models;
 
     use common\models\Article;
+    use common\models\Gather;
 
     class ArticleSpider{
         protected $category = [];//网站文章分类
@@ -11,8 +12,9 @@
         /**
          * 判断文章是否采集
          */
-        protected function isGathered(){
-
+        protected function isGathered($url){
+            $gather = Gather::find()->where(['url'=>md5(trim($url)),'res'=>true])->one();
+            return $gather?true:false;
         }
 
         /**
@@ -26,16 +28,28 @@
             $article->status = Article::STATUS_HIDDEN;
             $article->publish_at = $publish_at;
             $res = $article->save(false);
-            return $res;
+            return $res?true:false;
         }
 
         /**
          * 插入URL队列
          */
-        protected function enqueue($name,$baseUrl,$category,$url,$className,$publishTime=''){
-            $redis = new \Redis();
-            $redis->connect('127.0.0.1',6379);
-            $redis->LPUSH('articleUrls',json_encode(['name'=>$name,'baseUrl'=>$baseUrl,'category'=>$category,'url'=>$url,'className'=>$className,'publishTime'=>$publishTime]));
+        public function enqueue($category,$url,$className,$publishTime=''){
+            \Resque::enqueue('article_spider', 'console\models\ArticleJob',['category'=>$category,'url'=>$url,'className'=>$className,'publishTime'=>$publishTime]);
+        }
+
+        /**
+         * 日志
+         */
+        public function addLog($url,$category,$res,$result){
+            $gather = new Gather();
+            $gather->name = $this->name;
+            $gather->category = $category;
+            $gather->url = md5($url);
+            $gather->url_org = $url;
+            $gather->res = $res;
+            $gather->result = $result;
+            $gather->save();
         }
     }
 ?>
