@@ -14,6 +14,4 @@ class ArticleController extends Controller{
         $spider = new $className();
         $spider->process();
     }
-
-
 }
