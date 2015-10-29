@@ -20,6 +20,7 @@
 
             $class = new $className;
             $res = $class->getContent(trim($url),$category);
+           $res = json_decode($res,true);
             if($res){
                 $title = $res['title'];
                 $content = $res['content'];
@@ -28,5 +29,6 @@
                 $result = $class->insert($title,$content,$time);
                 $class->addLog($url,$category,$result,$title);
             }
+
         }
     }

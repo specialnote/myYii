@@ -9,9 +9,9 @@
             $this->name = 'Yiichina';
             $this->baseUrl = 'http://www.yiichina.com';
             $this->category = [
-                '教程'=>'http://www.yiichina.com/tutorial',
+               // '教程'=>'http://www.yiichina.com/tutorial',
                 '扩展'=>'http://www.yiichina.com/extension',
-                '源码'=>'http://www.yiichina.com/code',
+                //'源码'=>'http://www.yiichina.com/code',
             ];
         }
 

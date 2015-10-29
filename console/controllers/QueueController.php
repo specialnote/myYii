@@ -65,7 +65,7 @@ class QueueController extends yii\console\Controller{
                 }
             }
         }
-// Start a single worker
+        // Start a single worker
         else {
             $queues = explode(',', $QUEUE);
             $worker = new \Resque_Worker($queues);
