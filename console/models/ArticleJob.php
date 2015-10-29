@@ -6,7 +6,7 @@
     class ArticleJob{
         public function perform()
         {
-            // .. Run job
+            //获取队列内容属性
             $args=$this->args;
             $category= $args['category'];
             $url= $args['url'];
@@ -17,10 +17,9 @@
             if(!class_exists($className)){
                 throw new Exception($baseClassName.' Class does not exist');
             }
-
             $class = new $className;
             $res = $class->getContent(trim($url),$category);
-           $res = json_decode($res,true);
+            $res = json_decode($res,true);
             if($res){
                 $title = $res['title'];
                 $content = $res['content'];

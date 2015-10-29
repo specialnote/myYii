@@ -5,6 +5,10 @@
 
     class YiichinaSpider extends ArticleSpider{
         private $_url;
+
+        /**
+         * 构造方法，初始化采集网站属性
+         */
         public function __construct(){
             $this->name = 'Yiichina';
             $this->baseUrl = 'http://www.yiichina.com';
@@ -15,19 +19,22 @@
             ];
         }
 
+        /**
+         * 采集执行函数,调用 getPages ，获取所有分页 ；然后调用 urls ，获取每页文章的文章url，并将他们存入队列
+         */
         public function process(){
             foreach($this->category as $category=>$url){
                 $pages = $this->getPages($url,$category);
                 if($pages){
                     foreach($pages as $p){
-                        $this->getUrls($category,$p);
+                        $this->urls($category,$p);
                     }
                 }
             }
         }
 
         /**
-         * 获取当前网站分类的分页
+         * 获取当前网站指定分类的分页
          * @return array
          */
         private function getPages($pageUrl,$category){
@@ -51,7 +58,7 @@
          * @param $category
          * @param $url
          */
-        private function getUrls($category,$url){
+        private function urls($category,$url){
             $client = new Client();
             $crawler = $client->request('GET', $url);
             $crawler->filter('.media-list .media')->each(function ($node) use($category,$url) {
@@ -71,6 +78,12 @@
             });
         }
 
+        /**
+         * 获取指定url的文章内容
+         * @param $url
+         * @param $category
+         * @return string
+         */
         public function getContent($url,$category){
             $client = new Client();
             $crawler = $client->request('GET', $url);

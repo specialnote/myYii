@@ -11,6 +11,8 @@
 
         /**
          * 判断文章是否采集
+         * @param $url
+         * @return bool
          */
         protected function isGathered($url){
             $gather = Gather::find()->where(['url'=>md5(trim($url)),'res'=>true])->one();
@@ -18,7 +20,22 @@
         }
 
         /**
-         * 插入数据库
+         * 插入URL队列
+         * @param $category
+         * @param $url
+         * @param $className
+         * @param string $publishTime
+         */
+        public function enqueue($category,$url,$className,$publishTime=''){
+            \Resque::enqueue('article_spider', 'console\models\ArticleJob',['category'=>$category,'url'=>$url,'className'=>$className,'publishTime'=>$publishTime]);
+        }
+
+        /**
+         * 将文章插入数据库
+         * @param $title
+         * @param $content
+         * @param $publish_at
+         * @return bool
          */
         public static function insert($title,$content,$publish_at){
             $article = new Article();
@@ -32,14 +49,11 @@
         }
 
         /**
-         * 插入URL队列
-         */
-        public function enqueue($category,$url,$className,$publishTime=''){
-            \Resque::enqueue('article_spider', 'console\models\ArticleJob',['category'=>$category,'url'=>$url,'className'=>$className,'publishTime'=>$publishTime]);
-        }
-
-        /**
-         * 日志
+         * 采集日志
+         * @param $url
+         * @param $category
+         * @param $res
+         * @param $result
          */
         public function addLog($url,$category,$res,$result){
             $gather = new Gather();
