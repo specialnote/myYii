@@ -23,6 +23,17 @@ class m150910_081901_category extends Migration
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
         ], $tableOptions);
+
+        $this->insert('{{%category}}',[
+            'name'=>'采集',
+            'slug'=>'gather',
+            'description'=>'所有采集文章分类',
+            'article_counts'=>0,
+            'parent'=>0,
+            'status'=>10,
+            'created_at'=>time(),
+            'updated_at'=>time()
+        ]);
     }
 
     public function down()
