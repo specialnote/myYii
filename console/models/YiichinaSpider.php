@@ -13,9 +13,9 @@
             $this->name = 'Yiichina';
             $this->baseUrl = 'http://www.yiichina.com';
             $this->category = [
-               // '教程'=>'http://www.yiichina.com/tutorial',
+                '教程'=>'http://www.yiichina.com/tutorial',
                 '扩展'=>'http://www.yiichina.com/extension',
-                //'源码'=>'http://www.yiichina.com/code',
+                '源码'=>'http://www.yiichina.com/code',
             ];
         }
 
@@ -54,7 +54,7 @@
         }
 
         /**
-         * 获取每页的文章分页
+         * 获取每页的文章列表中文章URL和发布时间
          * @param $category
          * @param $url
          */
@@ -79,7 +79,7 @@
         }
 
         /**
-         * 获取指定url的文章内容
+         * 获取指定url的文章标题、内容、发布时间
          * @param $url
          * @param $category
          * @return string

@@ -2,7 +2,9 @@
     namespace console\models;
 
     use common\models\Article;
+    use common\models\ArticleTag;
     use common\models\Gather;
+    use common\models\Tag;
 
     class ArticleSpider{
         protected $category = [];//网站文章分类
@@ -35,16 +37,34 @@
          * @param $title
          * @param $content
          * @param $publish_at
+         * @param $tag
          * @return bool
          */
-        public static function insert($title,$content,$publish_at){
+        public static function insert($title,$content,$publish_at,$tag=''){
+            //插入标签（搜索的分类）
             $article = new Article();
             $article->title = $title;
             $article->content = $content;
             $article->author = 'yang';
-            $article->status = Article::STATUS_HIDDEN;
+            $article->status = Article::STATUS_GATHER;
             $article->publish_at = $publish_at;
             $res = $article->save(false);
+            if($tag){
+                $tagModel = Tag::find()->where(['name'=>$tag])->one();
+                if(!$tagModel){
+                    $tagModel = new Tag();
+                    $tagModel->name = $tag;
+                    $tagModel->article_count = 1;
+                    $tagModel->save(false);
+                }else{
+                    Tag::updateAllCounters(['article_count'=>1],['id'=>$tagModel->id]);
+                }
+                $articleTag = new ArticleTag();
+                $articleTag->article_id = $article->id;
+                $articleTag->tag_id = $tagModel->id;
+                $articleTag->save(false);
+            }
+
             return $res?true:false;
         }
 

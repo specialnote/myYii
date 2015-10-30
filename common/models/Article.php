@@ -26,8 +26,9 @@ use yii\behaviors\TimestampBehavior;
  */
 class Article extends \yii\db\ActiveRecord
 {
-    const STATUS_DISPLAY = 10;
-    const STATUS_HIDDEN = 20;
+    const STATUS_DISPLAY = 10;//显示
+    const STATUS_HIDDEN = 20;//隐藏
+    const STATUS_GATHER = 30;//采集
 
     public $tag;
     /**

@@ -12,7 +12,6 @@
             $url= $args['url'];
             $baseClassName= $args['className'];
             $publishTime = $args['publishTime'];
-
             $className = '\console\models\\'.ucfirst(strtolower($baseClassName)).'Spider';
             if(!class_exists($className)){
                 throw new Exception($baseClassName.' Class does not exist');
@@ -25,7 +24,7 @@
                 $content = $res['content'];
                 $time = $res['time'];
                 $time = $publishTime?:$time;
-                $result = $class->insert($title,$content,$time);
+                $result = $class->insert($title,$content,$time,$category);
                 $class->addLog($url,$category,$result,$title);
             }
 
