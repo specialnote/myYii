@@ -127,7 +127,7 @@ class LoginForm extends Model
         if($this->_user === null){
             $this->_user = User::findByMobile($this->username);
         }
-        if(!in_array($this->_user->group,[User::GROUP_ADMIN,User::GROUP_WRITER])){
+        if($this->_user && !in_array($this->_user->group,[User::GROUP_ADMIN,User::GROUP_WRITER])){
             return false;
         }
         return $this->_user;

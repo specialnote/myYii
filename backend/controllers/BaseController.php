@@ -50,27 +50,18 @@ class BaseController extends Controller
             $node = $controllerId.'_'.$actionId;//拼装权限节点
             //未登录
             if(Yii::$app->user->isGuest){
-                if(!in_array($node,['site_login','site_register','site_index','site_captcha','site_error'])){
-                    return $this->goHome();
-                }else{
+                if(in_array($node,['site_login','site_index','site_captcha','site_error'])){
                     return true;
                 }
             }else{
-                //都可以访问,不用验证权限
-                if(in_array($node,['site_login','site_register','site_index','site_captcha','site_logout','site_error'])){
+                //所有用户可以访问
+                if(in_array($node,['site_login','site_password','site_logout','site_index','site_captcha','site_error'])){
                     return true;
                 }
-                //非作者、管理员不能登录后台
-                if(!in_array(Yii::$app->user->identity->group,[User::GROUP_ADMIN,User::GROUP_WRITER])){
-                    Yii::$app->user->logout();
-                    throw new ForbiddenHttpException('普通用户无权访问');
+                //修改密码
+                if(!Yii::$app->user->identity->changed_password && in_array($node,['site_login','site_index','site_captcha','site_logout','site_error','site_password'])){
+                    return true;
                 }
-
-                //未改密码(待修改)
-                if(!Yii::$app->user->identity->changed_password){
-                    throw new Exception('请更改密码');//之后要做修改密码操作
-                }
-
                 //超级管理员(待修改)
                 if(Yii::$app->user->id ==1){
                     return true;

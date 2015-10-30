@@ -316,9 +316,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         return $this->group === User::GROUP_ADMIN;
     }
 
-    /*
+    /**
      * 设置不同场景
-     * */
+     * @param $act
+     */
     public function setMyScenario($act){
         switch($act){
             case 'username':
@@ -339,9 +340,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         }
     }
 
-    /*
+    /**
      * 获取状态名称
-     * */
+     * @return string
+     */
     public function getStatusName(){
         if($this->status === User::STATUS_ACTIVE){
             return '可用';
@@ -350,9 +352,10 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         }
     }
 
-    /*
+    /**
      * 获取分组名称
-     * */
+     * @return string
+     */
     public function getGroupName(){
         if($this->group === User::GROUP_ADMIN){
             return '管理员';
@@ -364,5 +367,5 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             return '未知';
         }
     }
-    
+
 }

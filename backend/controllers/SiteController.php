@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use backend\models\ResetPasswordForm;
 use Yii;
 use backend\models\LoginForm;
 
@@ -29,9 +30,14 @@ class SiteController extends BaseController
     }
     public function actionIndex()
     {
+        if(Yii::$app->user->isGuest) return $this->redirect(['/site/login']);
         return $this->render('index');
     }
 
+    /**
+     * 登录
+     * @return string|\yii\web\Response
+     */
     public function actionLogin()
     {
         $this->layout = false;
@@ -41,7 +47,10 @@ class SiteController extends BaseController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            if(!Yii::$app->user->identity->changed_password){
+                return $this->redirect(['/site/password']);
+            }
+            return $this->goHome();
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -49,10 +58,30 @@ class SiteController extends BaseController
         }
     }
 
+    /**
+     * 退出
+     * @return \yii\web\Response
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * 修改面膜
+     * @return string|\yii\web\Response
+     */
+    public function actionPassword(){
+        if(Yii::$app->user->isGuest) return $this->redirect(['/site/login']);
+        $model = new ResetPasswordForm(Yii::$app->user->identity->password_reset_token);
+        if ($model->load(Yii::$app->request->post()) && $model->resetPassword()) {
+            Yii::$app->user->logout();
+            return $this->redirect(['/site/login']);
+        }
+        return $this->render('password',[
+            'model'=>$model
+        ]);
     }
 }

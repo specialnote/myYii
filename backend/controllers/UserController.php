@@ -68,6 +68,8 @@ class UserController extends BaseController
         $model = new User();
         $model->setScenario('create_user');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->generatePasswordResetToken();
+            $model->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -89,6 +91,8 @@ class UserController extends BaseController
         $model = $this->findModel($id);
         $model->setScenario('update_user');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->generatePasswordResetToken();
+            $model->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
