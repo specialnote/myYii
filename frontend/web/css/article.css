@@ -1,3 +1,4 @@
+/*===================================== 文章列表开始 =====================================*/
 .article-title{font-size: 18px;margin: 0px;}
 .panel .panel-heading {
     background: #FCFCFC;
@@ -32,8 +33,25 @@
     height: 20px;
     line-height: 20px;
     text-overflow: ellipsis ;
-    overflow:hidden;
+    overflow:hidden!important;
     white-space: nowrap;
-    display: block;;
-    width: 100%;
+    display: block!important;
+    width: 100%!important;
 }
+/*菜单导航*/
+.category-menu{
+    list-style: none;
+}
+.category-menu li{
+    float: left;
+    height: 30px;
+}
+/*===================================== 文章列表结束 =====================================*/
+
+
+/*===================================== 文章详情开始 =====================================*/
+.wrap{height: 100%;}
+.container{height: 100%;}
+.frontend-article-detail{height: 90%;}
+.footer{height: 10%;}
+/*===================================== 文章详情结束 =====================================*/

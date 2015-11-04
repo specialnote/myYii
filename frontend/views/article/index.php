@@ -4,6 +4,22 @@
     $this->registerCssFile('@web/css/article.css');
 ?>
 <div class="row">
+    <ul class="category-menu">
+        <li>
+            <a href="<?= Url::to(['/article/index']) ?>">全部</a>
+        </li>
+        <?php foreach($categories as $category): ?>
+            <?php if($category->name): ?>
+                <li>
+                    <a href="<?= Url::to(['/article/index','category'=>$category->id]) ?>">
+                        <?= $category->name ?>
+                    </a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach;?>
+    </ul>
+</div>
+<div class="row">
     <div class="col-md-9 col-lg-9">
         <div class="panel panel-default">
             <div class="panel-heading">

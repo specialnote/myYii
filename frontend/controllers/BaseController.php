@@ -14,18 +14,16 @@ use yii\web\ForbiddenHttpException;
  */
 class BaseController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+
+    public function beforeAction($action){
+        if(parent::beforeAction($action)){
+            if(!in_array($action->controller->id,['article'])){
+                return $this->redirect('/article/index');
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
     }
 }

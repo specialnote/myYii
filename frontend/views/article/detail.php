@@ -1,16 +1,5 @@
 <?php
     use yii\helpers\Url;
-
-    $this->registerCss(
-        <<<CSS
-    html{height: 100%;}
-    body{height: 100%;}
-    .wrap{height: 100%;}
-    .container{height: 100%;}
-    .frontend-article-detail{height: 90%;}
-    .footer{height: 10%;}
-CSS
-    );
 ?>
 <div class="container frontend-article-detail">
     <div class="row">

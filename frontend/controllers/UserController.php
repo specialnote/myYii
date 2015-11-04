@@ -12,10 +12,9 @@ use common\models\User;
 use yii\base\Exception;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
-use yii\web\Controller;
 use Yii;
 
-class UserController extends Controller{
+class UserController extends BaseController{
     /**
      * 个人中心
      * @return string
