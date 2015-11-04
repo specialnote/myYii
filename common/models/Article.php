@@ -223,5 +223,11 @@ class Article extends \yii\db\ActiveRecord
         return trim($string,';');
     }
 
-
+    /**
+     * 采集时候过滤状态
+     * @return array
+     */
+    public static function get_status(){
+        return [Article::STATUS_DISPLAY=>'显示',Article::STATUS_GATHER=>'采集'];
+    }
 }

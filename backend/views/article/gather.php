@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             [
                 'attribute'=>'id',
@@ -57,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->getStatusName($model->status);
                 },
                 'headerOptions'=>['width'=>'100px'],
+                'filter'=>\common\models\Article::get_status(),
             ],
             ['class' => 'yii\grid\ActionColumn',
                 'header'=>'<font style="color: #337ab7">操作</font>',

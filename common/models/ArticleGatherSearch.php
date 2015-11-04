@@ -10,7 +10,7 @@ use common\models\Article;
 /**
  * ArticleSearch represents the model behind the search form about `common\models\Article`.
  */
-class ArticleSearch extends Article
+class ArticleGatherSearch extends Article
 {
     /**
      * @inheritdoc
@@ -18,8 +18,7 @@ class ArticleSearch extends Article
     public function rules()
     {
         return [
-            [[ 'publish_at'], 'string'],
-            [['title', 'category_id', 'author'], 'safe'],
+            [['status'], 'safe'],
         ];
     }
 
@@ -41,7 +40,7 @@ class ArticleSearch extends Article
      */
     public function search($params)
     {
-        $query = Article::find()->where(['in','status',[Article::STATUS_HIDDEN,Article::STATUS_DISPLAY]]);
+        $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,19 +51,9 @@ class ArticleSearch extends Article
         if (!$this->validate()) {
             return $dataProvider;
         }
-        if($this->publish_at){
-            $query->andFilterWhere(['like','publish_at',$this->publish_at]);
+        if($this->status){
+            $query->andFilterWhere(['like','status',$this->status]);
         }
-        if($this->title){
-            $query->andFilterWhere(['like', 'title', $this->title]);
-        }
-        if($this->author){
-            $query->andFilterWhere(['like', 'author', $this->author]);
-        }
-        if($this->category_id){
-            $query->andFilterWhere(['category_id'=>$this->category_id]);
-        }
-
         return $dataProvider;
     }
 }

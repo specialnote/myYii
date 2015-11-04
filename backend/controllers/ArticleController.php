@@ -2,14 +2,12 @@
 
 namespace backend\controllers;
 
+use common\models\ArticleGatherSearch;
 use common\models\Category;
 use Yii;
 use common\models\Article;
 use common\models\ArticleSearch;
-use backend\controllers\BaseController;
-use yii\console\Response;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -113,13 +111,12 @@ class ArticleController extends BaseController
      * 采集文章管理
      */
     public function actionGather(){
-        $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $searchModel = new ArticleGatherSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('gather',[
-            'dataProvider'=>$dataProvider,
+        return $this->render('gather', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

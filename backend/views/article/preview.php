@@ -9,7 +9,8 @@ CSS
     );
 
 $this->title = '采集文章管理';
-$this->params['breadcrumbs'][] = ['label' => '采集管理', 'url' => ['/article/gather']];
+$this->params['breadcrumbs'][] = ['label' => '文章管理', 'url' => ['/article/index']];
+$this->params['breadcrumbs'][] = ['label' => '文章采集管理', 'url' => ['/article/gather']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <p>
