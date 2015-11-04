@@ -50,6 +50,7 @@ AppAsset::register($this);
         ['label'=>'控制台','items'=>[
             ['label'=>'用户管理','url'=>'/user/index'],
             ['label'=>'分类管理','url'=>'/category/index'],
+            ['label'=>'采集文章管理','url'=>'/article/gather'],
             ['label'=>'文章管理','url'=>'/article/index'],
         ]],
         ['label'=>'权限管理','items'=>[

@@ -157,11 +157,7 @@ use kucha\ueditor\UEditor;
         <?php else: ?>
             <?= Html::activeLabel($model,'tag')?>
             <?php
-                $str = '';
-                foreach($tags as $tag){
-                    $str.=$tag['name'].';';
-                }
-                echo Html::activeTextInput($model,'tag',['value'=>$str,'disabled'=>true])
+                echo Html::activeTextInput($model,'tag',['value'=>$tag,'disabled'=>true])
             ?>
         <?php endif; ?>
     </div>

@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('新建文章', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('采集文章管理',['/article/gather'], ['class' => 'btn btn-primary fr']) ?>
     </p>
 
     <?= GridView::widget([

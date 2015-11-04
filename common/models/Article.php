@@ -139,10 +139,13 @@ class Article extends \yii\db\ActiveRecord
      * 获取文章状态名称
      * */
     public function getStatusName($status){
+        $status = $status?:$this->status;
         if($status == Article::STATUS_DISPLAY){
             return '显示';
         }elseif($status == Article::STATUS_HIDDEN){
             return '隐藏';
+        }elseif($status == Article::STATUS_GATHER){
+            return '采集';
         }else{
             return '';
         }
@@ -178,8 +181,10 @@ class Article extends \yii\db\ActiveRecord
         return $tags;
     }
 
+    /**
+     * 获取当前分类最新10条，阅读量最多10条
+     */
     public function getRelativeArticles(){
-        //获取当前分类最新10条，阅读量最多10条
         $category_id = $this->category_id;
 
         $tags = $this->getArticleTag();
@@ -188,5 +193,35 @@ class Article extends \yii\db\ActiveRecord
             $tag_id[] = $tag['id'];
         }
     }
+
+    /**
+     * 获取当前文章分类名字
+     * @return mixed|string
+     */
+    public function getCategoryName(){
+        if($this->category_id){
+            $category = Category::find()->where(['status'=>Category::STATUS_DISPLAY,'id'=>$this->category_id])->one();
+            if($category){
+                return $category->name;
+            }
+        }
+        return '无分类';
+    }
+
+    /**
+     * 获取当前文章的标签拼接
+     * @return string
+     */
+    public function getArticleTagToString(){
+        $tags = $this->getArticleTag();
+        $string = '';
+        if($tags){
+            foreach($tags as $tag){
+                $string.=$tag['name'].';';
+            }
+        }
+        return trim($string,';');
+    }
+
 
 }

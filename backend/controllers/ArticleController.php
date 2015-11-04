@@ -2,30 +2,21 @@
 
 namespace backend\controllers;
 
+use common\models\Category;
 use Yii;
 use common\models\Article;
 use common\models\ArticleSearch;
 use backend\controllers\BaseController;
+use yii\console\Response;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
  */
 class ArticleController extends BaseController
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     public function actions()
     {
         return [
@@ -94,13 +85,13 @@ class ArticleController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $tags = $model->getArticleTag();
+        $tag = $model->getArticleTagToString();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'tags'  =>$tags,
+                'tag'  =>$tag,
             ]);
         }
     }
@@ -116,6 +107,113 @@ class ArticleController extends BaseController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * 采集文章管理
+     */
+    public function actionGather(){
+        $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $this->render('gather',[
+            'dataProvider'=>$dataProvider,
+        ]);
+    }
+
+    /**
+     * 采集文章预览
+     * @param $id
+     * @return string
+     */
+    public function actionPreview($id){
+        $article = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]])->andWhere(['id'=>$id])->one();
+        return $this->render('preview',[
+            'article'=>$article,
+        ]);
+    }
+
+    /**
+     * 批量发布文章
+     * @return string|\yii\web\Response
+     */
+    public function actionPublish(){
+        if(Yii::$app->request->isPost){
+            $ids = Yii::$app->request->post('ids');
+            $url = Yii::$app->request->post('url')?:'/article/gather';
+            if($ids){
+                $num = 0;
+                foreach($ids as $id){
+                    $article = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]])->andWhere(['id'=>$id])->one();
+                    if(!$article) continue;
+                    $article->status = Article::STATUS_DISPLAY;
+                    if($article->save(false)){
+                        $num++;
+                    }
+                }
+                Yii::$app->session->setFlash('success','成功发布文章【'.$num.'】篇');
+                return $this->redirect($url);
+            }else{
+                Yii::$app->session->setFlash('error','文章不能为空，请选择文章');
+                return $this->redirect($url);
+            }
+        }else{
+            $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+            return $this->render('publish',[
+                'dataProvider'=>$dataProvider,
+            ]);
+        }
+
+    }
+
+    /**
+     * 批量更改文章分类
+     * @return string|\yii\web\Response
+     */
+    public function actionCategory(){
+        if(Yii::$app->request->isPost){
+            $ids = Yii::$app->request->post('ids');
+            $url = Yii::$app->request->post('url')?:'/article/gather';
+            $category_id = Yii::$app->request->post('category_id');
+            if($ids){
+                $category = Category::find()->where(['status'=>Category::STATUS_DISPLAY,'id'=>$category_id])->one();
+                if($category){
+                    $num = 0;
+                    foreach($ids as $id){
+                        $article = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]])->andWhere(['id'=>$id])->one();
+                        if(!$article) continue;
+                        $article->category_id = $category_id;
+                        if($article->save(false)){
+                            $num++;
+                        }
+                    }
+                    Yii::$app->session->setFlash('success','成功更改文章分类【'.$num.'】篇');
+                    return $this->redirect($url);
+                }else{
+                    Yii::$app->session->setFlash('error','文章分类不能为空');
+                    return $this->redirect($url);
+                }
+            }else{
+                Yii::$app->session->setFlash('error','文章不能为空，请选择文章');
+                return $this->redirect($url);
+            }
+        }else{
+            $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+
+            return $this->render('category',[
+                'dataProvider'=>$dataProvider,
+            ]);
+        }
     }
 
     /**
