@@ -43,8 +43,42 @@
     list-style: none;
 }
 .category-menu li{
+    display: block;
     float: left;
     height: 30px;
+    line-height: 30px;
+    border: 1px solid #ccc;
+    min-width: 100px;
+    text-align: center;
+    border-radius: 5px;
+}
+.menu_selected{
+    background: #eee;
+}
+/*热门标签*/
+.article-tag{
+    padding: 0px;
+}
+.article-tag li{
+    float: left;
+    background-color: #5cb85c;
+    display: block;
+    padding: 0px 10px 0px 10px!important;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 5px;
+    height: 35px;
+    line-height: 35px;
+    margin: 5px 5px 5px 0px!important;
+}
+.article-tag li a{
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+}
+.tag_selected{
+    border: 2px solid #000;
 }
 /*===================================== 文章列表结束 =====================================*/
 
