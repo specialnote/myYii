@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::hiddenInput('url',Yii::$app->request->getHostInfo().Yii::$app->request->url) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             [
                 'header'=>'<input type="checkbox"  id="check-all">',
@@ -76,6 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->getStatusName($model->status);
                 },
                 'headerOptions'=>['width'=>'100px'],
+                'filter'=>\common\models\Article::get_status(),
             ],
 
         ],

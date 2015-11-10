@@ -82,7 +82,7 @@
                     <?php foreach($tags as $tag): ?>
                         <li class="<?= ($tag_id == $tag->id)?'tag_selected':'' ?>">
                             <a href="<?= Url::to(['/article/index','tag_id'=>$tag->id]) ?>">
-                                <?= $tag->id.$tag->name.'<font style="color:#555">('.$tag->article_count.')</font>' ?>
+                                <?= $tag->id.' '.$tag->name.'<font style="color:#555">('.$tag->article_count.')</font>' ?>
                             </a>
                         </li>
                     <?php endforeach;?>

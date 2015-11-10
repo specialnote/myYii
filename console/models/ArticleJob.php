@@ -24,8 +24,12 @@
                 $content = $res['content'];
                 $time = $res['time'];
                 $time = $publishTime?:$time;
-                $result = $class->insert($title,$content,$time,$category);
-                $class->addLog($url,$category,$result,$title);
+               try{
+                   $result = $class->insert($title,$content,$time,$category);
+                   $class->addLog($url,$category,$result,$title);
+               }catch(\Exception $e){
+                   echo $e->getMessage().PHP_EOL;
+               }
             }
 
         }

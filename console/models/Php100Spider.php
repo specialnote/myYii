@@ -13,23 +13,23 @@
             $this->name = 'PHP100';
             $this->baseUrl = 'http://www.php100.com/';
             $this->category = [
-                '编辑开发'=>'http://www.php100.com/html/it/biancheng/',
-                '前段技术'=>'http://www.php100.com/html/it/qianduan/',
-                '互联网新闻'=>'http://www.php100.com/html/it/hulianwang/',
-               '程序员生活'=>'http://www.php100.com/html/it/chengxuyuan/',
+               // '编辑开发'=>'http://www.php100.com/html/it/biancheng/',
+                //'前段技术'=>'http://www.php100.com/html/it/qianduan/',
+              //  '互联网新闻'=>'http://www.php100.com/html/it/hulianwang/',
+              // '程序员生活'=>'http://www.php100.com/html/it/chengxuyuan/',
                'PHP入门'=>'http://www.php100.com/html/php/rumen/',
                'PHP函数'=>'http://www.php100.com/html/php/hanshu/',
-               'PHP框架与应用'=>'http://www.php100.com/html/php/lei/',
-               '开发接口 '=>'http://www.php100.com/html/php/api/',
-               'HTML '=>'http://www.php100.com/html/program/html/',
-               'DIV、CSS '=>'http://www.php100.com/html/program/divcss/',
-               'HTML5 '=>'http://www.php100.com/html/program/html5/',
-               'XML '=>'http://www.php100.com/html/program/xml/',
-               'Apache '=>'http://www.php100.com/html/program/apache/',
-               'Nginx '=>'http://www.php100.com/html/program/nginx/',
-               'Linux '=>'http://www.php100.com/html/program/linux/',
-               'Mysql '=>'http://www.php100.com/html/program/mysql/',
-               'Javascript '=>'http://www.php100.com/html/program/javascript/',
+             //  'PHP框架与应用'=>'http://www.php100.com/html/php/lei/',
+             //  '开发接口 '=>'http://www.php100.com/html/php/api/',
+              // 'HTML '=>'http://www.php100.com/html/program/html/',
+               //'DIV、CSS '=>'http://www.php100.com/html/program/divcss/',
+             //  'HTML5 '=>'http://www.php100.com/html/program/html5/',
+              // 'XML '=>'http://www.php100.com/html/program/xml/',
+              // 'Apache '=>'http://www.php100.com/html/program/apache/',
+              // 'Nginx '=>'http://www.php100.com/html/program/nginx/',
+              // 'Linux '=>'http://www.php100.com/html/program/linux/',
+              // 'Mysql '=>'http://www.php100.com/html/program/mysql/',
+               //'Javascript '=>'http://www.php100.com/html/program/javascript/',
             ];
         }
 

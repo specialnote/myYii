@@ -59,4 +59,18 @@ class ArticleTag extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
+    /**
+     * 将指定文章的所有标签文章数加1
+     * @param $article_id
+     * @return bool
+     */
+    public static function updateTagArticleCounts($article_id){
+        $articleTag = ArticleTag::find()->where(['article_id'=>$article_id])->all();
+        if(!$articleTag)return false;
+        foreach($articleTag as $v){
+            Tag::updateAllCounters(['article_count'=>1],['id'=>$v->tag_id]);
+        }
+        return true;
+    }
 }

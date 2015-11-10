@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use common\models\ArticleGatherSearch;
+use common\models\ArticleTag;
 use common\models\Category;
+use common\models\Tag;
 use Yii;
 use common\models\Article;
 use common\models\ArticleSearch;
@@ -149,6 +151,8 @@ class ArticleController extends BaseController
                     if($article->save(false)){
                         $num++;
                     }
+                    //更改文章标签数量
+                    ArticleTag::updateTagArticleCounts($id);
                 }
                 Yii::$app->session->setFlash('success','成功发布文章【'.$num.'】篇');
                 return $this->redirect($url);
@@ -157,13 +161,12 @@ class ArticleController extends BaseController
                 return $this->redirect($url);
             }
         }else{
-            $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query,
-            ]);
+            $searchModel = new ArticleGatherSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             return $this->render('publish',[
-                'dataProvider'=>$dataProvider,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
             ]);
         }
 
@@ -201,14 +204,12 @@ class ArticleController extends BaseController
                 return $this->redirect($url);
             }
         }else{
-            $query = Article::find()->where(['in','status',[Article::STATUS_GATHER,Article::STATUS_DISPLAY]]);
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query,
-            ]);
-
+            $searchModel = new ArticleGatherSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             return $this->render('category',[
-                'dataProvider'=>$dataProvider,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
             ]);
         }
     }

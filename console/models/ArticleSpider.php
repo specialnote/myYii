@@ -50,21 +50,22 @@
             $article->publish_at = $publish_at;
             $res = $article->save(false);
             if($tag){
-                $tagModel = Tag::find()->where(['name'=>$tag])->one();
-                if(!$tagModel){
-                    $tagModel = new Tag();
-                    $tagModel->name = $tag;
-                    $tagModel->article_count = 1;
-                    $tagModel->save(false);
-                }else{
-                    Tag::updateAllCounters(['article_count'=>1],['id'=>$tagModel->id]);
+                try{
+                    $tagModel = Tag::find()->where(['name'=>$tag])->one();
+                    if(!$tagModel){
+                        $tagModel = new Tag();
+                        $tagModel->name = $tag;
+                        $tagModel->article_count = 0;
+                        $tagModel->save(false);
+                    }
+                    $articleTag = new ArticleTag();
+                    $articleTag->article_id = $article->id;
+                    $articleTag->tag_id = $tagModel->id;
+                    $articleTag->save(false);
+                }catch(\Exception $e){
+                    echo $e->getMessage().PHP_EOL;
                 }
-                $articleTag = new ArticleTag();
-                $articleTag->article_id = $article->id;
-                $articleTag->tag_id = $tagModel->id;
-                $articleTag->save(false);
             }
-
             return $res?true:false;
         }
 
