@@ -3,35 +3,35 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Gather;
-use yii\data\ActiveDataProvider;
+use common\models\Fund;
+use common\models\FundSearch;
 use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Goutte\Client;
 
 /**
- * GatherController implements the CRUD actions for Gather model.
+ * FundController implements the CRUD actions for Fund model.
  */
-class GatherController extends BaseController
+class FundController extends BaseController
 {
-
     /**
-     * Lists all Gather models.
+     * Lists all Fund models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Gather::find(),
-        ]);
+        $searchModel = new FundSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single Gather model.
+     * Displays a single Fund model.
      * @param integer $id
      * @return mixed
      */
@@ -43,13 +43,13 @@ class GatherController extends BaseController
     }
 
     /**
-     * Creates a new Gather model.
+     * Creates a new Fund model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Gather();
+        $model = new Fund();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -61,7 +61,7 @@ class GatherController extends BaseController
     }
 
     /**
-     * Updates an existing Gather model.
+     * Updates an existing Fund model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -80,7 +80,7 @@ class GatherController extends BaseController
     }
 
     /**
-     * Deletes an existing Gather model.
+     * Deletes an existing Fund model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -93,15 +93,15 @@ class GatherController extends BaseController
     }
 
     /**
-     * Finds the Gather model based on its primary key value.
+     * Finds the Fund model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Gather the loaded model
+     * @return Fund the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Gather::findOne($id)) !== null) {
+        if (($model = Fund::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

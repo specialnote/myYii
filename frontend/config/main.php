@@ -29,6 +29,13 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules'=>[
+                '<controller:(article)>/<action:(detail)>/<id:\d+>'=>'<controller>/<action>',
+            ],
+        ],
     ],
     'params' => $params,
 ];

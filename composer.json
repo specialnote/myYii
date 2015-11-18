@@ -28,7 +28,8 @@
         "moxiecode/plupload":"*",
         "kucha/ueditor": "*",
         "fabpot/goutte":"*",
-        "chrisboulton/php-resque": "1.2.x"
+        "chrisboulton/php-resque": "1.2.x",
+        "Chart.js":"*"
     },
     "config": {
         "process-timeout": 1800

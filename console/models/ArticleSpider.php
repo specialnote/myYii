@@ -76,7 +76,7 @@
          * @param $res
          * @param $result
          */
-        public function addLog($url,$category,$res,$result){
+        public function addLog($url,$category,$res,$result,$date=''){
             $gather = new Gather();
             $gather->name = $this->name;
             $gather->category = $category;

@@ -57,6 +57,9 @@ AppAsset::register($this);
             ['label'=>'节点管理','url'=>'/node/index'],
             ['label'=>'角色管理','url'=>'/role/index'],
         ]],
+        ['label'=>'Fund','items'=>[
+            ['label'=>'fund','url'=>'/fund/index'],
+        ]],
     ];
     foreach($leftItems as $v){
         echo Nav::widget([

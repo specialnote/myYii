@@ -26,7 +26,7 @@
                 $time = $publishTime?:$time;
                try{
                    $result = $class->insert($title,$content,$time,$category);
-                   $class->addLog($url,$category,$result,$title);
+                   $class->addLog($url,$category,$result,$title,$time);
                }catch(\Exception $e){
                    echo $e->getMessage().PHP_EOL;
                }
