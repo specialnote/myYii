@@ -17,11 +17,12 @@ class BaseController extends Controller
 
     public function beforeAction($action){
         if(parent::beforeAction($action)){
-            if(!in_array($action->controller->id,['article'])){
+           /* if(!in_array($action->controller->id,['article'])){
                 return $this->redirect('/article/index');
             }else{
                 return true;
-            }
+            }*/
+            return true;
         }else{
             return false;
         }

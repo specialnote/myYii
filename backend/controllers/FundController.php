@@ -7,8 +7,6 @@ use common\models\Fund;
 use common\models\FundSearch;
 use backend\controllers\BaseController;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use Goutte\Client;
 
 /**
  * FundController implements the CRUD actions for Fund model.

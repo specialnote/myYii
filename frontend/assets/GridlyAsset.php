@@ -4,17 +4,20 @@ namespace frontend\assets;
 
 use yii\web\AssetBundle;
 
-class AppAsset extends AssetBundle
+/**
+ * jquery实现拖拽效果 jQuery Gridly
+ */
+class GridlyAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/jquery.gridly.css',
     ];
     public $js = [
+        'js/jquery.gridly.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        'yii\web\JqueryAsset',
     ];
 }

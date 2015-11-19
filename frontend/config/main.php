@@ -11,7 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
-    'defaultRoute' => 'article',//修改默认控制器
+    'defaultRoute' => 'site',//修改默认控制器
     'components' => [
         'user' => [
             'identityClass' => 'common\models\User',
