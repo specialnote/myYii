@@ -2,6 +2,7 @@
 namespace console\controllers;
 
 use common\models\Fund;
+use common\models\FundData;
 use common\models\Gather;
 use yii\console\Controller;
 use yii\web\NotFoundHttpException;
@@ -35,11 +36,58 @@ class FundController extends Controller{
         }
     }
 
+    public function actionData(){
+        $client = new Client();
+        foreach($this->url as $u){
+            $crawler = $client->request('GET', $u);
+            $result = $crawler->text();
+
+            $result = trim($result,'g');
+            $result = trim($result,'(');
+            $result = trim($result,')');
+            $data_area = json_decode($result,true);
+            foreach($data_area['data']['data'] as $key=>$v) {
+               $this->insertData($v);
+            }
+        }
+    }
+
     private static function isExist($num,$date){
         $fund = Fund::find()->where(['num'=>trim($num),'date'=>trim($date)])->one();
         return $fund?true:false;
     }
 
+    private static function isFund($num){
+        $fund = Fund::find()->where(['num'=>trim($num)])->one();
+        return $fund?true:false;
+    }
+
+    private function insertData($fundData){
+        $iopv = $fundData['net'];
+        $accnav = $fundData['totalnet'];
+        $growth = $fundData['ranges'];
+        $rate = $fundData['rate'];
+        $num = $fundData['code'];
+        $date = $fundData['SYENDDATE'];
+       // echo $num.'--'.$date.'--'.$iopv.'--'.$accnav.'--'.$growth.'--',$rate.PHP_EOL;
+        if($num && $date && $iopv && $accnav && $growth && $rate){
+            if(self::isFund($num)){
+               try{
+                   $fundData = new FundData();
+                   $fundData->date = $date;
+                   $fundData->fund_num = $num;
+                   $fundData->iopv = $iopv;
+                   $fundData->accnav = $accnav;
+                   $fundData->growth = $growth;
+                   $fundData->rate = $rate;
+                   $fundData->save();
+               }catch(\Exception $e){
+                   echo $e->getMessage().PHP_EOL;
+               }
+            }
+        }
+
+    }
 
     /**
      * 插入基金表

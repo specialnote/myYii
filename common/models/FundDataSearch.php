@@ -5,12 +5,12 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Fund;
+use common\models\FundData;
 
 /**
- * FundSearch represents the model behind the search form about `common\models\Fund`.
+ * FundDataSearch represents the model behind the search form about `common\models\FundData`.
  */
-class FundSearch extends Fund
+class FundDataSearch extends FundData
 {
     /**
      * @inheritdoc
@@ -19,7 +19,7 @@ class FundSearch extends Fund
     {
         return [
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'num', 'date', 'week', 'month', 'quarter', 'year', 'three_year', 'all'], 'safe'],
+            [['date', 'fund_num', 'iopv', 'accnav', 'growth', 'rate'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class FundSearch extends Fund
      */
     public function search($params)
     {
-        $query = Fund::find();
+        $query = FundData::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -62,15 +62,12 @@ class FundSearch extends Fund
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'num', $this->num])
-            ->andFilterWhere(['like', 'date', $this->date])
-            ->andFilterWhere(['like', 'week', $this->week])
-            ->andFilterWhere(['like', 'month', $this->month])
-            ->andFilterWhere(['like', 'quarter', $this->quarter])
-            ->andFilterWhere(['like', 'year', $this->year])
-            ->andFilterWhere(['like', 'three_year', $this->three_year])
-            ->andFilterWhere(['like', 'all', $this->all]);
+        $query->andFilterWhere(['like', 'date', $this->date])
+            ->andFilterWhere(['like', 'fund_num', $this->fund_num])
+            ->andFilterWhere(['like', 'iopv', $this->iopv])
+            ->andFilterWhere(['like', 'accnav', $this->accnav])
+            ->andFilterWhere(['like', 'growth', $this->growth])
+            ->andFilterWhere(['like', 'rate', $this->rate]);
 
         return $dataProvider;
     }

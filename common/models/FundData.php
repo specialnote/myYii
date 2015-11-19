@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "fund_data".
@@ -32,9 +33,9 @@ class FundData extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fund_id', 'date'], 'required'],
+            [['fund_num', 'date'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
-            [['fund_id'], 'string', 'max' => 50],
+            [['fund_num'], 'string', 'max' => 50],
             [['iopv', 'accnav', 'rate'], 'string', 'max' => 10],
             [['growth'], 'string', 'max' => 20]
         ];
@@ -47,7 +48,7 @@ class FundData extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fund_id' => 'Fund ID',
+            'fund_num' => '编号',
             'date' => '日期',
             'iopv' => '单位净值',
             'accnav' => '累计净值',
@@ -55,6 +56,16 @@ class FundData extends \yii\db\ActiveRecord
             'rate' => '增长率',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 }

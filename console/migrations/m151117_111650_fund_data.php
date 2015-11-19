@@ -13,7 +13,7 @@ class m151117_111650_fund_data extends Migration
         }
         $this->createTable('{{%fund_data}}', [
             'id' => $this->primaryKey(),
-            'fund_id'=>$this->string(50),
+            'fund_num'=>$this->string(50),
             'date' => $this->string(10),
             'iopv' => $this->string(10),//基金单位净值
             'accnav' => $this->string(10),//基金累计净值
