@@ -3,6 +3,7 @@ namespace console\controllers;
 
 use common\models\Fund;
 use common\models\FundData;
+use common\models\FundLog;
 use common\models\Gather;
 use yii\console\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,7 +15,7 @@ class FundController extends Controller{
         //'http://fund.ijijin.cn/data/Net/info/hhx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',
         //'http://fund.ijijin.cn/data/Net/info/gpx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',
     ];
-
+    //采集基金基本信息
     public function actionRun(){
         $client = new Client();
         foreach($this->url as $url){
@@ -36,6 +37,7 @@ class FundController extends Controller{
         }
     }
 
+    //采集基金基本详情
     public function actionData(){
         $client = new Client();
         foreach($this->url as $u){
@@ -62,6 +64,11 @@ class FundController extends Controller{
         return $fund?true:false;
     }
 
+    /**
+     * 采集基金详情
+     * @param $fundData
+     * @return bool
+     */
     private function insertData($fundData){
         $iopv = $fundData['net'];
         $accnav = $fundData['totalnet'];
@@ -69,7 +76,6 @@ class FundController extends Controller{
         $rate = $fundData['rate'];
         $num = $fundData['code'];
         $date = $fundData['SYENDDATE'];
-       // echo $num.'--'.$date.'--'.$iopv.'--'.$accnav.'--'.$growth.'--',$rate.PHP_EOL;
         if($num && $date && $iopv && $accnav && $growth && $rate){
             if(self::isFund($num)){
                try{
@@ -80,17 +86,29 @@ class FundController extends Controller{
                    $fundData->accnav = $accnav;
                    $fundData->growth = $growth;
                    $fundData->rate = $rate;
-                   $fundData->save();
+                  $res =  $fundData->save();
+
+                   if($res){
+                       //基金详情采集日志
+                       FundLog::insertFundLog($num,$date,FundLog::ITEM_FUND_DATA);
+                       return true;
+                   }else{
+                       return false;
+                   }
                }catch(\Exception $e){
                    echo $e->getMessage().PHP_EOL;
+                   return false;
                }
+            }else{
+                return false;
             }
+        }else{
+            return false;
         }
-
     }
 
     /**
-     * 插入基金表
+     * 采集基金基本信息
      * @param $fundData
      * @return bool
      */
@@ -110,7 +128,13 @@ class FundController extends Controller{
             $fund->three_year = $fundData['F012'];
             $fund->all = $fundData['F015N_FUND33'];
             $res = $fund->save();
-            return $res?true:false;
+            if($res){
+                //基金详情采集日志
+                FundLog::insertFundLog(trim($fundData['code']),trim($fundData['SYENDDATE']),FundLog::ITEM_FUND_DATA);
+                return true;
+            }else{
+                return false;
+            }
         }catch(\Exception $e){
             echo $e->getMessage().PHP_EOL;
             return false;

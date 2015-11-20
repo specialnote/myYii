@@ -45,7 +45,7 @@ class FundSearch extends Fund
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' =>  ['pageSize' => 50],
+            'pagination' =>  ['pageSize' => 20],
         ]);
 
         $this->load($params);

@@ -36,7 +36,7 @@ class FundData extends \yii\db\ActiveRecord
             [['fund_num', 'date'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['fund_num'], 'string', 'max' => 50],
-            [['iopv', 'accnav', 'rate'], 'string', 'max' => 10],
+            [['iopv', 'accnav', 'rate','month','week'], 'string', 'max' => 10],
             [['growth'], 'string', 'max' => 20]
         ];
     }
@@ -53,7 +53,7 @@ class FundData extends \yii\db\ActiveRecord
             'iopv' => '单位净值',
             'accnav' => '累计净值',
             'growth' => '增长值',
-            'rate' => '增长率',
+            'rate' => '增长率(%)',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

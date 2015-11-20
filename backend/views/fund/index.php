@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\FundSearch */
@@ -14,6 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
     tbody tr{padding: 0px;height: 20px;}
     tbody tr td{height: 20px;line-height: 20px;margin: 0px;padding: 0px!important;}
 </style>
+<p>
+    <?= Html::a('周平均数分析', ['/fund/week'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('月平均数分析',['/fund/month'], ['class' => 'btn btn-primary ']) ?>
+</p>
 <div class="fund-index">
 
     <?= GridView::widget([
@@ -23,82 +28,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'num',
             'date',
-            [
-                'attribute'=>'week',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->week;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
-            [
-                'attribute'=>'month',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->month;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
-            [
-                'attribute'=>'quarter',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->quarter;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
-            [
-                'attribute'=>'year',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->year;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
-            [
-                'attribute'=>'three_year',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->three_year;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
-            [
-                'attribute'=>'all',
-                'format'=>'html',
-                'value'=>function($model){
-                    $value = $model->all;
-                    if($value <0){
-                        return  '<span style="color: green">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }else{
-                        return  '<span style="color: red">'.Yii::$app->formatter->asPercent($value).'</span>';
-                    }
-                }
-            ],
+            'week',
+            'month',
+            'quarter',
+            'year',
+            'three_year',
+            'all',
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn','template'=>'{view}'],
+            [
+                'label'=>'操作',
+                'format'=>'raw',
+                'value' => function($data){
+                    return Html::a('数据', Url::to(['/fund/data','num'=>trim($data->num)]), ['title' => '数据']).' | '.Html::a('分析',Url::to(['/fund/assize','num'=>trim($data->num)]));
+                }
+            ],
         ],
         'tableOptions'=>['class' => 'table table-striped table-hover']
     ]); ?>

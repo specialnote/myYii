@@ -3,7 +3,7 @@
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m151117_111650_fund_data extends Migration
+class m151120_031459_fund_log extends Migration
 {
     public function up()
     {
@@ -11,27 +11,30 @@ class m151117_111650_fund_data extends Migration
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB COMMENT "基金净值表"';
         }
-        $this->createTable('{{%fund_data}}', [
+        $this->createTable('{{%fund_log}}', [
             'id' => $this->primaryKey(),
             'fund_num'=>$this->string(50),
             'date' => $this->string(10),
-            'week' => $this->string(10),//一年第几周
-            'month' => $this->string(10),//一年第几月
-            'year' => $this->string(10),//第几年
-            'iopv' => $this->string(10),//基金单位净值
-            'accnav' => $this->string(10),//基金累计净值
-            'growth' => $this->string(20),//增长值
-            'rate' => $this->string(10),//增长率
+            'item' => $this->string(10),//记录项目
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
         ], $tableOptions);
-
     }
 
     public function down()
     {
-        $this->dropTable('{{%fund_data}}');
+        $this->dropTable('{{%fund_log}}');
         return false;
     }
 
+    /*
+    // Use safeUp/safeDown to run migration code within a transaction
+    public function safeUp()
+    {
+    }
+
+    public function safeDown()
+    {
+    }
+    */
 }

@@ -2,10 +2,14 @@
 
 namespace backend\controllers;
 
+use common\models\FundData;
+use common\models\FundLog;
 use Yii;
 use common\models\Fund;
 use common\models\FundSearch;
 use backend\controllers\BaseController;
+use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -29,67 +33,110 @@ class FundController extends BaseController
     }
 
     /**
-     * Displays a single Fund model.
-     * @param integer $id
-     * @return mixed
+     * 查看单个基金详情
+     * @param $num
+     * @return string
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+    public function actionData($num){
+        $dataProvider = new ActiveDataProvider([
+            'query' => FundData::find()->where(['fund_num'=>$num]),
+            'pagination' =>  ['pageSize' => 50],
+            'sort' => [
+                'defaultOrder' => [
+                    'date'=>SORT_DESC,
+                ]
+            ],
+        ]);
+
+        return $this->render('data',[
+            'dataProvider' => $dataProvider,
+            'num'=>$num
+        ]);
+    }
+    //周数据分析
+    public function actionWeek(){
+        set_time_limit(-1);
+        $fund = Fund::find()->select('num')->distinct()->all();
+        $fund = ArrayHelper::getColumn($fund,'num');
+        foreach($fund as $num){
+            $fundData = FundData::find()->where(['fund_num'=>$num])->groupBy('week')->all();
+            foreach($fundData as $data){
+
+            }
+        }
+    }
+    public function  actionAssize($num){
+        $month_data = [];//按月统计
+        $week_data = [];//按周统计
+        $data = FundData::find()->select('year')->where(['fund_num'=>$num])->distinct()->all();
+        $years = ArrayHelper::getColumn($data,'year');
+        $data = FundData::find()->select('month')->where(['fund_num'=>$num])->distinct()->all();
+        $months = ArrayHelper::getColumn($data,'month');
+        if($years){
+            foreach($years as $year){
+                $sql = "SELECT `month`,AVG(iopv) as `month_avg_iopv`,AVG(growth)as `month_avg_growth`   FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."'group by `month` order by `year` DESC , `month` DESC ";
+                $month_data[$year] = Yii::$app->db->createCommand($sql)->queryAll();
+                foreach($months as $month){
+                    $sql = "SELECT `week`,AVG(iopv) as `week_avg_iopv`,AVG(growth)as `week_avg_growth`   FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."' and `month`='".$month."' group by `week` order by `year` DESC , `month` DESC , `week` DESC";
+                    $week_data[$year][$month] = Yii::$app->db->createCommand($sql)->queryAll();
+                }
+            }
+        }
+    //var_dump($month_data);die;
+        return $this->render('assize',[
+           'num'=>$num,
+            'month_data'=>$month_data,
+            'week_data'=>$week_data,
         ]);
     }
 
     /**
-     * Creates a new Fund model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * 根据fund表，将每个基金的历史数据导入数据库
      */
-    public function actionCreate()
-    {
-        $model = new Fund();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+    public function actionImport(){
+        set_time_limit(-1);
+        $fund = Fund::find()->select('num')->distinct()->all();
+        $fund = ArrayHelper::getColumn($fund,'num');
+        foreach($fund as $num){
+            if($num){
+                $url = 'http://fund.10jqka.com.cn/'.$num.'/historynet.html';
+                $content = file_get_contents($url);
+                if(strstr($content,'JsonData = [')){
+                    $content =  substr($content,strpos($content,'JsonData = [')+11);
+                    $content =  substr($content,0,strpos($content,'useData = JsonData;'));
+                    $content = trim($content);
+                    $content = trim($content,';');
+                    if($content){
+                        $data = json_decode($content,true);
+                        if($data){
+                            foreach($data as $v){
+                                if($v['date']&&$v['net']&&$v['totalnet']&&$v['inc']&&$v['rate']){
+                                    $fundData = FundData::find()->where(['date'=>$v['date'],'fund_num'=>$num])->one();
+                                    if($fundData)continue;
+                                    $fundData = new FundData();
+                                    $fundData->date = $v['date'];
+                                    $fundData->week = date('W',strtotime($v['date']));
+                                    $fundData->month = date('m',strtotime($v['date']));
+                                    $fundData->year = date('Y',strtotime($v['date']));
+                                    $fundData->fund_num = trim($num);
+                                    $fundData->iopv = $v['net'];
+                                    $fundData->accnav = $v['totalnet'];
+                                    $fundData->growth = $v['inc'];
+                                    $fundData->rate = $v['rate'];
+                                    $res = $fundData->save();
+                                    if($res){
+                                        echo $num.'--'.$v['date'].'--'.$v['net'].'--'.$v['totalnet'].'--'.$v['inc'].'--',$v['rate'].'<br/>';
+                                       FundLog::insertFundLog(trim($num),trim($v['date']),FundLog::ITEM_FUND_DATA);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     }
-
-    /**
-     * Updates an existing Fund model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Fund model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
     /**
      * Finds the Fund model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
