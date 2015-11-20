@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\FundData;
 use common\models\FundLog;
+use Goutte\Client;
 use Yii;
 use common\models\Fund;
 use common\models\FundSearch;
@@ -17,6 +18,39 @@ use yii\web\NotFoundHttpException;
  */
 class FundController extends BaseController
 {
+    private $url = [
+        //'http://fund.ijijin.cn/data/Net/info/zqx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//债券
+        'http://fund.ijijin.cn/data/Net/info/hhx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//基金
+        //'http://fund.ijijin.cn/data/Net/info/gpx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//股票
+    ];
+    //采集基金基本信息
+    public function actionRun(){
+        $client = new Client();
+        foreach($this->url as $url){
+            $crawler = $client->request('GET', $url);
+            $result = $crawler->text();
+
+            $result = trim($result,'g');
+            $result = trim($result,'(');
+            $result = trim($result,')');
+            $data_area = json_decode($result,true);
+            foreach($data_area['data']['data'] as $key=>$v) {
+                $num = $v['code'];
+                $date = $v['SYENDDATE'];
+                if($this->isExist(trim($num),trim($date))){
+                    continue;
+                }
+                $this->insert($v);
+            }
+        }
+    }
+
+    private static function isExist($num,$date){
+        $fund = Fund::find()->where(['num'=>trim($num),'date'=>trim($date)])->one();
+        return $fund?true:false;
+    }
+
+
     /**
      * Lists all Fund models.
      * @return mixed
@@ -74,10 +108,10 @@ class FundController extends BaseController
         $months = ArrayHelper::getColumn($data,'month');
         if($years){
             foreach($years as $year){
-                $sql = "SELECT `month`,AVG(iopv) as `month_avg_iopv`,AVG(growth)as `month_avg_growth`   FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."'group by `month` order by `year` DESC , `month` DESC ";
+                $sql = "SELECT `month`,AVG(iopv) as `month_avg_iopv`,AVG(growth)as `month_avg_growth` ,AVG(rate)as `month_avg_rate`  FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."'group by `month` order by `year` DESC , `month` DESC ";
                 $month_data[$year] = Yii::$app->db->createCommand($sql)->queryAll();
                 foreach($months as $month){
-                    $sql = "SELECT `week`,AVG(iopv) as `week_avg_iopv`,AVG(growth)as `week_avg_growth`   FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."' and `month`='".$month."' group by `week` order by `year` DESC , `month` DESC , `week` DESC";
+                    $sql = "SELECT `week`,AVG(iopv) as `week_avg_iopv`,AVG(growth)as `week_avg_growth`,AVG(rate)as `week_avg_rate`   FROM {{%fund_data}} WHERE `fund_num` = '".$num."' and `year`='".$year."' and `month`='".$month."' group by `week` order by `year` DESC , `month` DESC , `week` DESC";
                     $week_data[$year][$month] = Yii::$app->db->createCommand($sql)->queryAll();
                 }
             }

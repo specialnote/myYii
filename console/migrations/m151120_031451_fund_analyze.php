@@ -17,10 +17,12 @@ class m151120_031451_fund_analyze extends Migration
             'week' => $this->string(10),//第几周
             'week_average_iopv' => $this->string(10),//周平均净值
             'week_average_growth' => $this->string(10),//周平均增长值
+            'week_average_rate' => $this->string(10),//周平均增长值率
             'month' => $this->string(10),//第几月
             'month_average' => $this->string(10),//月平均净值
             'month_average_iopv' => $this->string(10),//月平均净值
             'month_average_growth' => $this->string(10),//月平均增长值
+            'month_average_rate' => $this->string(10),//月平均增长值率
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
         ], $tableOptions);

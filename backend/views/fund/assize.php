@@ -19,6 +19,7 @@
                 <th>month</th>
                 <th>iopv</th>
                 <th>growth</th>
+                <th>rate(%)</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +39,9 @@
                     echo '</td>';
                     echo '<td>';
                     echo $v2['month_avg_growth'];
+                    echo '</td>';
+                    echo '<td>';
+                    echo $v2['month_avg_rate'];
                     echo '</td>';
                     echo '</tr>';
                 }
@@ -80,6 +84,9 @@
                     echo '</td>';
                     echo '<td>';
                     echo   Yii::$app->formatter->asDecimal($v3['week_avg_growth']);
+                    echo '</td>';
+                    echo '<td>';
+                    echo   Yii::$app->formatter->asDecimal($v3['week_avg_rate']);
                     echo '</td>';
                     echo '</tr>';
                 }
