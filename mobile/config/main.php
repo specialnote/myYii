@@ -7,18 +7,11 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-frontend',
+    'id' => 'app-mobile',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'frontend\controllers',
-    'controllerMap'=>[
-        'mArticle'=>'frontend\controllers\MyArticleController',
-    ],//强制控制器ID和类名对应
+    'controllerNamespace' => 'mobile\controllers',
     'defaultRoute' => 'site',//修改默认控制器
-    //'defaultRoute' => 'article',
-    'modules'=>[
-        'account'=>'frontend\modules\account\Module'
-    ],//在应用中使用模块
     'components' => [
         'user' => [
             'identityClass' => 'common\models\User',
@@ -40,7 +33,6 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules'=>[
-                '<controller:(article)>/<action:(detail)>/<id:\d+>'=>'<controller>/<action>',
             ],
         ],
     ],
