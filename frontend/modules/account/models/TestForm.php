@@ -28,7 +28,7 @@
         public function attributeLabels(){
             return [
                 'email'=>'邮箱',
-                'nickname'=>'昵称',
+                'username'=>'昵称',
                 'mobile'=>'手机',
                 'pass'=>'密码',
                 'confirm'=>'确认密码'
@@ -40,6 +40,27 @@
                 'login'=>['username','pass'],
                 'register'=>['username','mobile','email','pass','confirm'],
             ];
+        }
+
+
+        // 明确列出每个字段，特别用于你想确保数据表或模型属性改变不会导致你的字段改变(保证后端的API兼容).
+        /*public function fields()
+        {
+            return [
+                'email',
+                'username',
+                'mobile'
+            ];
+        }*/
+
+        // 过滤掉一些字段，特别用于你想继承父类实现并不想用一些敏感字段
+        //fields只能对toArray()形式的数据导出进行过滤，不能对->attributes 的形式进行过滤
+       public function fields()
+        {
+            $fields = parent::fields();
+            unset($fields['pass'], $fields['confirm']);
+
+            return $fields;
         }
     }
 ?>

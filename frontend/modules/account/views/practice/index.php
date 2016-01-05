@@ -3,7 +3,7 @@
     use yii\bootstrap\ActiveForm;
 ?>
 <div class="row">
-    <!--<div class="col-md-8">
+   <!-- <div class="col-md-8">
         <?/*= Html::beginForm() */?>
             <?/*= Html::activeTextInput($model,'username') */?>
             <?/*= Html::activeTextInput($model,'mobile',['maxlength'=>11]) */?>
@@ -13,6 +13,7 @@
             <?/*= Html::submitButton('注册') */?>
         <?/*= Html::endForm() */?>
     </div>-->
+    <h1>ActiveForm 生成的表单能够自动向后台验证</h1>
     <div class="col-md-8">
         <?php $form =  ActiveForm::begin() ?>
             <?= $form->field($model,'username')->textInput() ?>
