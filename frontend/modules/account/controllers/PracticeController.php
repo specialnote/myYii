@@ -6,6 +6,7 @@
     use Yii;
 
     class PracticeController extends Controller{
+        //表单练习
         public function actionIndex(){
             $model = new TestForm();
             $model->scenario = 'register';
@@ -20,6 +21,10 @@
                     'model'=>$model,
                 ]);
             }
+        }
+
+        public function actionWidget(){
+            return $this->render('widget');
         }
     }
 ?>
