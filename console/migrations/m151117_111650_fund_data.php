@@ -11,7 +11,6 @@ class m151117_111650_fund_data extends Migration
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB COMMENT "基金数据表"';
         }
-        $this->dropTable('{{%fund_data}}');
         $this->createTable('{{%fund_data}}', [
             'id' => $this->primaryKey(),
             'fund_num'=>$this->string(50),
