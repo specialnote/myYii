@@ -90,7 +90,7 @@ class FundController extends Controller{
 
     /**
      * 采集所有基金历史数据
-     * 已采集过8
+     * 已采集过11
      */
     /**
       SELECT YEAR(`date`),MONTH(`date`),WEEK(`date`),SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '000291' GROUP BY YEAR(`date`),MONTH(`date`),WEEK(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC,WEEK(`date`) DESC ;
@@ -98,7 +98,7 @@ class FundController extends Controller{
     public function actionHistory($page =1){
         @set_time_limit(0);
         @ini_set('memory_limit','1280M');
-        $size = 50;
+        $size = 100;
         $fundNum = FundNum::find()->offset(($page-1)*$size)->limit($size)->all();
         $client = new Client();
         foreach($fundNum as $k=>$fund){
@@ -109,6 +109,7 @@ class FundController extends Controller{
                 $content = $crawler->text();
                 $content = substr($content,strpos($content,'pages:')+6);
                 $pagesize = substr($content,0,strpos($content,','));
+                $pagesize  = min($pagesize,10);
                 for($i=1;$i<=$pagesize;$i++){
                     $url =  'http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code='.$num.'&page='.$i.'&per=20';
                     $model = FundUrlLog::find()->where(['md5_url'=>md5($url)])->one();

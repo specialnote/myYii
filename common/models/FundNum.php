@@ -58,4 +58,17 @@ class FundNum extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
+    public static function getRate($rate){
+        $rate = number_format($rate,2);
+        if($rate >5){
+            return '<span style="color: #FC0000">'.$rate.'</span>';
+        }elseif($rate >0){
+            return '<span style="color: #FA4B4B">'.$rate.'</span>';
+        }elseif($rate > -5){
+            return '<span style="color: #039D50">'.$rate.'</span>';
+        }else{
+            return '<span style="color: #004321">'.$rate.'</span>';
+        }
+    }
 }
