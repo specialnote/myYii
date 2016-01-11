@@ -11,7 +11,6 @@
             <tr>
                 <th>年</th>
                 <th>月</th>
-                <th>周</th>
                 <th>幅度</th>
             </tr>
             </thead>
@@ -20,7 +19,6 @@
                <tr>
                    <td><?= $data['year'] ?></td>
                    <td><?= $data['month'] ?></td>
-                   <td><?= $data['week'] ?></td>
                    <td><?= \common\models\FundNum::getRate($data['sum_rate'])?></td>
                </tr>
            <?php } ?>

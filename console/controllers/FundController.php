@@ -90,7 +90,7 @@ class FundController extends Controller{
 
     /**
      * 采集所有基金历史数据
-     * 已采集过11
+     * 已采集过12
      */
     /**
       SELECT YEAR(`date`),MONTH(`date`),WEEK(`date`),SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '000291' GROUP BY YEAR(`date`),MONTH(`date`),WEEK(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC,WEEK(`date`) DESC ;
