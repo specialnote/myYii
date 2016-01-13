@@ -10,7 +10,10 @@ namespace frontend\controllers;
 
 
 use common\models\FundNum;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class FundController extends BaseController
 {
@@ -61,7 +64,7 @@ class FundController extends BaseController
         $fund = FundNum::find()->where(['fund_num'=>$num])->one();
         if(!$fund) throw new NotFoundHttpException($num.'没有找到');
         $connection = \Yii::$app->db;
-        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY date DESC");
+        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` ASC");
         $posts = $command->queryAll();
         return $this->render('day-detail',[
             'datas'=>$posts,
@@ -69,14 +72,43 @@ class FundController extends BaseController
         ]);
     }
 
+    /**
+     * 获取每个基金每天的盈利总和数据
+     * @param $num
+     * @return string
+     */
     public function actionDayDetailData($num){
         $connection = \Yii::$app->db;
-        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY date DESC");
+        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` ASC");
         $posts = $command->queryAll();
         $data = [];
         foreach($posts as $v){
             $data[] = [strtotime($v['date'])*1000,floatval($v['rate'])];
         }
         return json_encode($data);
+    }
+
+    public function actionSort ($type = FundNum::TYPE_ZQ){
+        if(\Yii::$app->request->isPost){
+            $start = Html::encode(\Yii::$app->request->post('start'));
+            $end = Html::encode(\Yii::$app->request->post('end'));
+            if($start && $end){
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                $connection = \Yii::$app->db;
+                $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>$type])->asArray()->all();
+                $nums = ArrayHelper::getColumn($nums,'fund_num');
+                $nums = '(\''.implode('\',\'',$nums).'\')';
+                $command = $connection->createCommand("SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
+                $posts = $command->queryAll();
+                return $posts;
+            }else{
+                return '';
+            }
+        }else{
+            return $this->render('sort',[
+                'datas'=>[]
+            ]);
+        }
+
     }
 }

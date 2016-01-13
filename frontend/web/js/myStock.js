@@ -9,38 +9,19 @@ $(function () {
             chart: {
                 events: {
                     load: function () {
-                        if (!window.isComparing) {
-                            this.setTitle(null, {
-                                text: 'Built chart in ' + (new Date() - start) + 'ms'
-                            });
-                        }
+
                     }
-                },
-                zoomType: 'x'
+                }
+
             },
             rangeSelector: {
-
-                buttons: [{
-                    type: 'all',
-                    text: 'All'
-                }],
-                selected: 3
+                buttons: []
             },
-
             yAxis: {
                 title: {
-                    text: 'Temperature (°C)'
+                    text: 'ate'
                 }
             },
-
-            title: {
-                text: 'Hourly temperatures in Vik i Sogn, Norway, 2004-2010'
-            },
-
-            subtitle: {
-                text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
-            },
-
             series: [{
                 name: 'Temperature',
                 data: data

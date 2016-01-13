@@ -16,6 +16,11 @@ use yii\behaviors\TimestampBehavior;
  */
 class FundNum extends \yii\db\ActiveRecord
 {
+    const TYPE_ZQ = 'zqx';//债券
+    const TYPE_GG = 'gpx';//股票
+    const TYPE_ZS = 'zsx';//指数
+    const TYPE_HH = 'hhx';//混合
+    const TYPE_BB = 'bbx';//保本
     /**
      * @inheritdoc
      */
