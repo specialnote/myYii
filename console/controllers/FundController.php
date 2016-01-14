@@ -52,6 +52,7 @@ class FundController extends Controller{
      */
     public function actionDayHistory(){
         @set_time_limit(0);
+        @ini_set('memory_limit','1280M');
         $fundNum = FundNum::find()->all();
         $client = new Client();
         foreach($fundNum as $k=>$fund){
@@ -59,7 +60,6 @@ class FundController extends Controller{
             $url =  'http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code='.$num.'&page=1&per=20';
             $crawler = $client->request('GET', $url);
             if($crawler){
-                $crawler = $client->request('GET', $url);
                 $crawler->filter('tr')->each(function($node) use ($num){
                     $td = $node->filter('td');
                     try{
@@ -70,7 +70,6 @@ class FundController extends Controller{
                                 $date = $date->text();
                                 $rate = $rate->text();
                                 if(!FundHistory::find()->where(['fund_num'=>$num,'date'=>$date])->one()){
-                                    echo $num.'------'.$date,'------'.time().PHP_EOL;
                                     $history = new FundHistory([
                                         'fund_num'=>$num,
                                         'date'=>$date,
@@ -81,7 +80,7 @@ class FundController extends Controller{
                             }
                         }
                     }catch(\Exception $e){
-                        echo $e->getMessage().time().PHP_EOL;
+                        //echo $e->getMessage().time().PHP_EOL;
                     }
                 });
             }
