@@ -73,7 +73,7 @@ class FundNum extends \yii\db\ActiveRecord
         }elseif($rate > -5){
             return '<span style="color: #039D50">'.$rate.'</span>';
         }else{
-            return '<span style="color: #004321">'.$rate.'</span>';
+            return '<span style="color: green">'.$rate.'</span>';
         }
     }
 }

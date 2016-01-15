@@ -21,11 +21,11 @@ class FundController extends Controller{
 
     //爱基金获取上个交易日数据
     private $url = [
-        //'zqx'=>'http://fund.ijijin.cn/data/Net/info/zqx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//债券型
+        'zqx'=>'http://fund.ijijin.cn/data/Net/info/zqx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//债券型
         'hhx'=>'http://fund.ijijin.cn/data/Net/info/hhx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//混合
-       // 'gpx'=>'http://fund.ijijin.cn/data/Net/info/gpx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//股票型
-       // 'zsx'=>'http://fund.ijijin.cn/data/Net/info/zsx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//指数型
-       // 'bbx'=>'http://fund.ijijin.cn/data/Net/info/bbx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//保本型
+        'gpx'=>'http://fund.ijijin.cn/data/Net/info/gpx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//股票型
+        'zsx'=>'http://fund.ijijin.cn/data/Net/info/zsx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//指数型
+        'bbx'=>'http://fund.ijijin.cn/data/Net/info/bbx_F009_desc_0_0_1_9999_0_0_0_jsonp_g.html',//保本型
     ];
 
     //采集爱基金上个交易日数据

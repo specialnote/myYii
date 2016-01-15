@@ -64,7 +64,7 @@ class FundController extends BaseController
         $fund = FundNum::find()->where(['fund_num'=>$num])->one();
         if(!$fund) throw new NotFoundHttpException($num.'没有找到');
         $connection = \Yii::$app->db;
-        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` ASC");
+        $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` DESC");
         $posts = $command->queryAll();
         return $this->render('day-detail',[
             'datas'=>$posts,
@@ -88,6 +88,11 @@ class FundController extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * 查看一段时间基金排名
+     * @param string $type
+     * @return array|string
+     */
     public function actionSort ($type = FundNum::TYPE_ZQ){
         if(\Yii::$app->request->isPost){
             $start = Html::encode(\Yii::$app->request->post('start'));
@@ -98,9 +103,10 @@ class FundController extends BaseController
                 $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>$type])->asArray()->all();
                 $nums = ArrayHelper::getColumn($nums,'fund_num');
                 $nums = '(\''.implode('\',\'',$nums).'\')';
-                $command = $connection->createCommand("SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
+                $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 50";
+                $command = $connection->createCommand($sql);
                 $posts = $command->queryAll();
-                return $posts;
+                return ['sql'=>$sql,'data'=>$posts];
             }else{
                 return '';
             }
@@ -109,6 +115,61 @@ class FundController extends BaseController
                 'datas'=>[]
             ]);
         }
+    }
 
+    /**
+     * 按照周增长率排名删选基金
+     * @return string
+     */
+    public function actionWeekFilter(){
+        $w = date('W',strtotime('2015-12-31'));
+        for($i=1;$i<=$w;$i++){
+            $times[] = '2015-'.$i;
+        }
+        $w = date('W');
+        for($i=1;$i<=$w;$i++){
+            $times[] = '2016-'.$i;
+        }
+        return $this->render('week-filter',[
+            'times'=>$times,
+        ]);
+    }
+
+    /**
+     * ajax处理周筛选
+     * @return array|string
+     */
+    public function actionGetWeekFilter(){
+        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
+        $nums = ArrayHelper::getColumn($nums,'fund_num');
+        $nums = '(\''.implode('\',\'',$nums).'\')';
+        if(\Yii::$app->request->isPost){
+            $w = \Yii::$app->request->post('w');
+            if(count($w)>0){
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                $posts = [];
+                foreach($w as $k=>$v){
+                    if($k==10)break;
+                    $a = explode('-',$v);
+                    $connection = \Yii::$app->db;
+                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) = ".$a[0]." AND WEEK(`date`)=".$a[1]." GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
+                    $posts[$k] = $command->queryAll();
+                }
+                return $posts;
+            }
+        }
+        return '';
+    }
+
+
+    /**
+     * 取得上个周一
+     * @return string
+     */
+    private function getLastMonday()
+    {
+        if (date('l',time()) == 'Monday') return date('Y-m-d',strtotime('last monday'));
+
+        return date('Y-m-d',strtotime('-1 week last monday'));
     }
 }

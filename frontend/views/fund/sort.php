@@ -12,8 +12,9 @@
                 data:form.serialize(),
                 dataType:'json',
                 success:function(data){
+                    $('#sql').html(data.sql);
                     var html = '';
-                    $.each(data,function(i,item){
+                    $.each(data.data,function(i,item){
                         html +='<tr><td>'+item.fund_num+'</td><td>'+format(item.rate)+'</td></tr>';
                     });
                     $('.sort-tbody').html(html);
@@ -44,7 +45,7 @@ STR
         } else if (num > -5) {
             return '<span style="color: #039D50">' + num + '</span>';
         } else {
-            return '<span style="color: #004321">' + num + '</span>';
+            return '<span style="color: green">' + num + '</span>';
         }
     }
 </script>
@@ -55,6 +56,9 @@ STR
             <?= Html::textInput('end',null,['class'=>'datepicker-here','data-position'=>'right top','data-language'=>'zh-cn','data-date-format'=>'yyyy-mm-dd']) ?>
             <?= Html::button('查询',['class'=>'btn btn-primary','id'=>'fund-sort-submit']) ?>
         <?= Html::endForm() ?>
+    </div>
+    <div class="col-md-12" id="sql">
+
     </div>
     <div class="col-md-12">
         <table class="table table-striped table-hover">
