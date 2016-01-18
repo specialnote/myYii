@@ -1,9 +1,11 @@
 <?php
+    use yii\helpers\Url;
     use yii\helpers\Html;
     \frontend\assets\DateTimePickerAsset::register($this);
     $this->registerJs(<<<STR
     $('#my-element').datepicker();
     var form = $('#fund-sort-time');
+    var num = '';
     $('#fund-sort-submit').click(function(){
         if(form.find('input[name="start"]').val() && form.find('input[name="end"]').val()){
             $.ajax({
@@ -12,12 +14,20 @@
                 data:form.serialize(),
                 dataType:'json',
                 success:function(data){
-                    $('#sql').html(data.sql);
+                   // $('#sql').html(data.sql);
                     var html = '';
+                    var _fund = '<tr>';
                     $.each(data.data,function(i,item){
                         html +='<tr><td>'+item.fund_num+'</td><td>'+format(item.rate)+'</td></tr>';
+                        _fund += '<td>'+item.fund_num+'</td>';
+                       num +=item.fund_num+'_';
                     });
+                    _fund += '</tr>';
+                    $('#fund-num').append(_fund);
                     $('.sort-tbody').html(html);
+                    $('#duplicate').click(function(){
+                        duplicate(num);
+                    });
                 }
             });
         }
@@ -48,7 +58,17 @@ STR
             return '<span style="color: green">' + num + '</span>';
         }
     }
+    function duplicate(num){
+        $.post("<?= Url::to(['/fund/duplicate']) ?>",{'num':num},function(data){
+            if(data.code){
+                console.log(data.msg);
+            }
+        });
+    }
 </script>
+<style type="text/css">
+    #fund-num td{    border: 1px solid #ccc;}
+</style>
 <div class="row">
     <div class="col-md-12">
         <?= Html::beginForm(['/fund/sort'],'post',['id'=>'fund-sort-time']) ?>
@@ -56,6 +76,12 @@ STR
             <?= Html::textInput('end',null,['class'=>'datepicker-here','data-position'=>'right top','data-language'=>'zh-cn','data-date-format'=>'yyyy-mm-dd']) ?>
             <?= Html::button('查询',['class'=>'btn btn-primary','id'=>'fund-sort-submit']) ?>
         <?= Html::endForm() ?>
+    </div>
+    <table id="fund-num">
+
+    </table>
+    <div>
+        <button class="btn btn-primary" id="duplicate">查重</button>
     </div>
     <div class="col-md-12" id="sql">
 

@@ -161,6 +161,27 @@ class FundController extends BaseController
         return '';
     }
 
+    /**
+     * 获取帅选编号中重复的数据
+     * @return array
+     */
+    public function actionDuplicate(){
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        if(\Yii::$app->request->isPost){
+            $num = \Yii::$app->request->post('num','');
+            $num_array = explode('_',rtrim($num,'_'));
+            if($num_array){
+                $count =  array_count_values ($num_array);
+                foreach($count as $key=>$v){
+                    if($v === 1){
+                        unset($count[$key]);
+                    }
+                }
+                return ['code'=>true,'msg'=>$count];
+            }
+        }
+        return ['code'=>false,'msg'=>''];
+    }
 
     /**
      * 取得上个周一
