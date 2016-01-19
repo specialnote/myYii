@@ -68,7 +68,7 @@ STR
                 console.log(data.msg);
                 var html = '<ul>';
                 $.each(data.msg,function(i,item){
-                    html +='<li><a href="/fund/day-detail?num='+item+'" target="_blank">'+item+'</a></li>';
+                    html +='<li><a href="/fund/day-detail?num='+item+'" target="_blank">日详情：'+item+'</a> --- <a href="/fund/week-detail?num='+item+'" target="_blank">周详情：'+item+'</a> --- <a href="/fund/month-detail?num='+item+'" target="_blank">月详情：'+item+'</a></li>';
                 });
                 html+='</ul>';
                 $('#has-duplicate-num').html(html);

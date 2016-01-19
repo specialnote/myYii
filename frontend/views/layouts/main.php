@@ -51,6 +51,9 @@ AppAsset::register($this);
             'linkOptions' => ['data-method' => 'post']
         ];
     }
+    $menuItems[] = ['label' => '指定日期删选', 'url' => ['/fund/sort']];
+    $menuItems[] = ['label' => '周筛选', 'url' => ['/fund/week-filter']];
+    $menuItems[] = ['label' => 'fund', 'url' => ['/user/index']];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

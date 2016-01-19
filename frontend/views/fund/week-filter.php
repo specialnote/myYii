@@ -9,6 +9,7 @@
 </style>
 <script>
     var get_week_filter = '<?= Url::to(['/fund/get-week-filter']) ?>';
+    var get_week_duplicate = '<?= Url::to(['/fund/get-week-duplicate']) ?>';
     function format(value) {
         var num = value;
         if (!isNaN(value)) {
@@ -79,6 +80,21 @@
                             }
                         }
                         $('#week-data').html(html);
+                    }
+
+                 });
+                 $.post(get_week_duplicate,form.serialize(),function(data){
+                    if(data.length >0 ){
+                        var html = '';
+                        for(var i=0;i<data.length;i++){
+                            var v = data[i];
+                            if(v.length>0){
+                                for(var j=0;j<v.length;j++){
+                                    html +='<li>'+v[j] +'</li>';
+                                }
+                            }
+                        }
+                        $('#num-list').html(html);
                     }
 
                  });

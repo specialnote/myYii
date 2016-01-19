@@ -74,7 +74,7 @@ class FundController extends BaseController
     }
 
     /**
-     * 获取每个基金每天的盈利总和数据
+     * 获取每个基金每天的盈利数据
      * @param $num
      * @return string
      */
@@ -89,6 +89,11 @@ class FundController extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * 获取每个基金每天的净值数据
+     * @param $num
+     * @return string
+     */
     public function actionPriceDayDetailData($num){
         $posts = FundData::find()->where(['fund_num'=>$num])->orderBy(['date'=>SORT_ASC])->all();
         $data = [];
@@ -166,6 +171,34 @@ class FundController extends BaseController
                     $posts[$k] = $command->queryAll();
                 }
                 return $posts;
+            }
+        }
+        return '';
+    }
+
+    public function actionGetWeekDuplicate(){
+        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
+        $nums = ArrayHelper::getColumn($nums,'fund_num');
+        $nums = '(\''.implode('\',\'',$nums).'\')';
+        if(\Yii::$app->request->isPost){
+            $w = \Yii::$app->request->post('w');
+            if(count($w)>0){
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                $posts = [];
+                foreach($w as $k=>$v){
+                    if($k==10)break;
+                    $a = explode('-',$v);
+                    $connection = \Yii::$app->db;
+                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) = ".$a[0]." AND WEEK(`date`)=".$a[1]." GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
+                    $posts =array_merge($posts,ArrayHelper::getColumn($command->queryAll(),'fund_num'));
+                }
+                $count =  array_count_values ($posts);
+                foreach($count as $key=>$v){
+                    if($v !== count($w)){
+                        unset($count[$key]);
+                    }
+                }
+                return array_keys($count);
             }
         }
         return '';
