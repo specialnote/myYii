@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 
+use common\models\FundData;
 use common\models\FundNum;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -55,7 +56,7 @@ class FundController extends BaseController
     }
 
     /**
-     *  查看每个基金每天的盈利总和
+     *  查看每个基金每天的盈利
      * @param $num
      * @return string
      * @throws NotFoundHttpException
@@ -77,13 +78,22 @@ class FundController extends BaseController
      * @param $num
      * @return string
      */
-    public function actionDayDetailData($num){
+    public function actionRateDayDetailData($num){
         $connection = \Yii::$app->db;
         $command = $connection->createCommand("SELECT `date`,(rate+0) as rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` ASC");
         $posts = $command->queryAll();
         $data = [];
         foreach($posts as $v){
             $data[] = [strtotime($v['date'])*1000,floatval($v['rate'])];
+        }
+        return json_encode($data);
+    }
+
+    public function actionPriceDayDetailData($num){
+        $posts = FundData::find()->where(['fund_num'=>$num])->orderBy(['date'=>SORT_ASC])->limit(50)->all();
+        $data = [];
+        foreach($posts as $v){
+            $data[] = [strtotime($v['date'])*1000,floatval($v['accnav'])];
         }
         return json_encode($data);
     }
@@ -169,15 +179,17 @@ class FundController extends BaseController
         \Yii::$app->response->format = Response::FORMAT_JSON;
         if(\Yii::$app->request->isPost){
             $num = \Yii::$app->request->post('num','');
+            $array =  explode('##',rtrim($num,'##'));
+            $num = str_replace('##','',trim($num,'##'));
             $num_array = explode('_',rtrim($num,'_'));
             if($num_array){
                 $count =  array_count_values ($num_array);
                 foreach($count as $key=>$v){
-                    if($v === 1){
+                    if($v !== count($array)){
                         unset($count[$key]);
                     }
                 }
-                return ['code'=>true,'msg'=>$count];
+                return ['code'=>true,'msg'=>array_keys($count)];
             }
         }
         return ['code'=>false,'msg'=>''];

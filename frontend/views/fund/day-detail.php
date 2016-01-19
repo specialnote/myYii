@@ -8,10 +8,14 @@
     tr,td,th{height: 20px!important;margin: 0px!important;padding: 0px!important;}
 </style>
 <script>
-    var day_rate_data_url = "<?= Url::to(['/fund/day-detail-data','num'=>$num]) ?>";
+    var rate_day_rate_data_url = "<?= Url::to(['/fund/rate-day-detail-data','num'=>$num]) ?>";
+    var price_day_rate_data_url = "<?= Url::to(['/fund/price-day-detail-data','num'=>$num]) ?>";
 </script>
 <div class="row">
     <div id="day-rate-container" style="min-width:400px;height:400px"></div>
+</div>
+<div class="row">
+    <div id="day-price-container" style="min-width:400px;height:400px"></div>
 </div>
 <div class="row">
     <div class="col-md-12">

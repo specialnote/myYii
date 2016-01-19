@@ -5,7 +5,6 @@
     $this->registerJs(<<<STR
     $('#my-element').datepicker();
     var form = $('#fund-sort-time');
-    var num = '';
     $('#fund-sort-submit').click(function(){
         if(form.find('input[name="start"]').val() && form.find('input[name="end"]').val()){
             $.ajax({
@@ -17,21 +16,26 @@
                    // $('#sql').html(data.sql);
                     var html = '';
                     var _fund = '<tr>';
+                    var num = '';
                     $.each(data.data,function(i,item){
                         html +='<tr><td>'+item.fund_num+'</td><td>'+format(item.rate)+'</td></tr>';
                         _fund += '<td>'+item.fund_num+'</td>';
                        num +=item.fund_num+'_';
                     });
+                    num += '##';
+                    $('#duplicate-num').html($('#duplicate-num').html() + num);
                     _fund += '</tr>';
                     $('#fund-num').append(_fund);
                     $('.sort-tbody').html(html);
-                    $('#duplicate').click(function(){
-                        duplicate(num);
-                    });
+
                 }
             });
         }
     });
+
+      $('#duplicate').click(function(){
+            duplicate($('#duplicate-num').html());
+      });
 STR
 );
 ?>
@@ -62,6 +66,12 @@ STR
         $.post("<?= Url::to(['/fund/duplicate']) ?>",{'num':num},function(data){
             if(data.code){
                 console.log(data.msg);
+                var html = '<ul>';
+                $.each(data.msg,function(i,item){
+                    html +='<li><a href="/fund/day-detail?num='+item+'" target="_blank">'+item+'</a></li>';
+                });
+                html+='</ul>';
+                $('#has-duplicate-num').html(html);
             }
         });
     }
@@ -81,6 +91,8 @@ STR
 
     </table>
     <div>
+        <div id="has-duplicate-num"></div>
+        <textarea style="display: none;" id="duplicate-num"> </textarea>
         <button class="btn btn-primary" id="duplicate">查重</button>
     </div>
     <div class="col-md-12" id="sql">
