@@ -90,7 +90,7 @@ class FundController extends BaseController
     }
 
     public function actionPriceDayDetailData($num){
-        $posts = FundData::find()->where(['fund_num'=>$num])->orderBy(['date'=>SORT_ASC])->limit(50)->all();
+        $posts = FundData::find()->where(['fund_num'=>$num])->orderBy(['date'=>SORT_ASC])->all();
         $data = [];
         foreach($posts as $v){
             $data[] = [strtotime($v['date'])*1000,floatval($v['accnav'])];
