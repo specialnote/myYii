@@ -6,6 +6,7 @@
     #week-filter-list,#num-list,#week-data ul{list-style: none;}
     #week-filter-list li ,#num-list li{float: left;}
     #week-data li .fund-num{margin-right: 5px;}
+    #num-list li {margin-right: 10px;float: none;}
 </style>
 <script>
     var get_week_filter = '<?= Url::to(['/fund/get-week-filter']) ?>';
@@ -57,8 +58,8 @@
     </div>
 </div>
 <?php
-    $this->registerJs("
-        var form = $('#week-filter');
+    $this->registerJs(<<<STR
+     var form = $('#week-filter');
         form.find('.btn-primary').click(function(){
             var w = form.find('.w-check:checked');
             if(w.length>0){
@@ -84,23 +85,18 @@
 
                  });
                  $.post(get_week_duplicate,form.serialize(),function(data){
+                     var html = '';
                     if(data.length >0 ){
-                        var html = '';
                         for(var i=0;i<data.length;i++){
-                            var v = data[i];
-                            if(v.length>0){
-                                for(var j=0;j<v.length;j++){
-                                    html +='<li>'+v[j] +'</li>';
-                                }
-                            }
+                              html +='<li><a href="/fund/day-detail?num='+data[i]+'" target="_blank">日详情：'+data[i]+'</a> --- <a href="/fund/week-detail?num='+data[i]+'" target="_blank">周详情：'+data[i]+'</a> --- <a href="/fund/month-detail?num='+data[i]+'" target="_blank">月详情：'+data[i]+'</a></li>';
                         }
-                        $('#num-list').html(html);
                     }
-
+                    $('#num-list').html(html);
                  });
             }else{
                 alert('请选择时间');
             }
         });
-    ");
+STR
+);
 ?>

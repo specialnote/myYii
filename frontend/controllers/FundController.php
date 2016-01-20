@@ -118,7 +118,7 @@ class FundController extends BaseController
                 $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>$type])->asArray()->all();
                 $nums = ArrayHelper::getColumn($nums,'fund_num');
                 $nums = '(\''.implode('\',\'',$nums).'\')';
-                $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 50";
+                $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 100";
                 $command = $connection->createCommand($sql);
                 $posts = $command->queryAll();
                 return ['sql'=>$sql,'data'=>$posts];
@@ -131,81 +131,8 @@ class FundController extends BaseController
             ]);
         }
     }
-
     /**
-     * 按照周增长率排名删选基金
-     * @return string
-     */
-    public function actionWeekFilter(){
-        $w = date('W',strtotime('2015-12-31'));
-        for($i=1;$i<=$w;$i++){
-            $times[] = '2015-'.$i;
-        }
-        $w = date('W');
-        for($i=1;$i<=$w;$i++){
-            $times[] = '2016-'.$i;
-        }
-        return $this->render('week-filter',[
-            'times'=>$times,
-        ]);
-    }
-
-    /**
-     * ajax处理周筛选
-     * @return array|string
-     */
-    public function actionGetWeekFilter(){
-        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
-        $nums = ArrayHelper::getColumn($nums,'fund_num');
-        $nums = '(\''.implode('\',\'',$nums).'\')';
-        if(\Yii::$app->request->isPost){
-            $w = \Yii::$app->request->post('w');
-            if(count($w)>0){
-                \Yii::$app->response->format = Response::FORMAT_JSON;
-                $posts = [];
-                foreach($w as $k=>$v){
-                    if($k==10)break;
-                    $a = explode('-',$v);
-                    $connection = \Yii::$app->db;
-                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) = ".$a[0]." AND WEEK(`date`)=".$a[1]." GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
-                    $posts[$k] = $command->queryAll();
-                }
-                return $posts;
-            }
-        }
-        return '';
-    }
-
-    public function actionGetWeekDuplicate(){
-        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
-        $nums = ArrayHelper::getColumn($nums,'fund_num');
-        $nums = '(\''.implode('\',\'',$nums).'\')';
-        if(\Yii::$app->request->isPost){
-            $w = \Yii::$app->request->post('w');
-            if(count($w)>0){
-                \Yii::$app->response->format = Response::FORMAT_JSON;
-                $posts = [];
-                foreach($w as $k=>$v){
-                    if($k==10)break;
-                    $a = explode('-',$v);
-                    $connection = \Yii::$app->db;
-                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) = ".$a[0]." AND WEEK(`date`)=".$a[1]." GROUP BY fund_num ORDER BY rate DESC LIMIT 50");
-                    $posts =array_merge($posts,ArrayHelper::getColumn($command->queryAll(),'fund_num'));
-                }
-                $count =  array_count_values ($posts);
-                foreach($count as $key=>$v){
-                    if($v !== count($w)){
-                        unset($count[$key]);
-                    }
-                }
-                return array_keys($count);
-            }
-        }
-        return '';
-    }
-
-    /**
-     * 获取帅选编号中重复的数据
+     * 获取筛选编号中重复的数据
      * @return array
      */
     public function actionDuplicate(){
@@ -227,6 +154,81 @@ class FundController extends BaseController
         }
         return ['code'=>false,'msg'=>''];
     }
+
+    #######################################################################################################################################################################################################################
+
+    /**
+     * 按照周增长率排名删选基金
+     * @return string
+     */
+    public function actionWeekFilter(){
+        //拼接2016年每周信息
+        $w = date('W');
+        for($i=1;$i<=$w;$i++){
+            $times[] = $i;
+        }
+        return $this->render('week-filter',[
+            'times'=>$times,
+        ]);
+    }
+
+    /**
+     * ajax处理周筛选
+     * @return array|string
+     */
+    public function actionGetWeekFilter(){
+        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
+        $nums = ArrayHelper::getColumn($nums,'fund_num');
+        $nums = '(\''.implode('\',\'',$nums).'\')';
+        if(\Yii::$app->request->isPost){
+            $w = \Yii::$app->request->post('w');
+            if(count($w)>0){
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                $posts = [];
+                foreach($w as $k=>$v){
+                    if($k==5)break;
+                    $connection = \Yii::$app->db;
+                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) =2016  AND WEEK(`date`)=".$v." GROUP BY fund_num,`week` ORDER BY rate DESC LIMIT 100");
+                    $posts[$k] = $command->queryAll();
+                }
+                return $posts;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * ajax处理每周重复数据
+     * @return array|string
+     */
+    public function actionGetWeekDuplicate(){
+        $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>FundNum::TYPE_HH])->asArray()->all();
+        $nums = ArrayHelper::getColumn($nums,'fund_num');
+        $nums = '(\''.implode('\',\'',$nums).'\')';
+        if(\Yii::$app->request->isPost){
+            $w = \Yii::$app->request->post('w');
+            if(count($w)>0){
+                \Yii::$app->response->format = Response::FORMAT_JSON;
+                $posts = [];
+                foreach($w as $k=>$v){
+                    if($k==5)break;
+                    $connection = \Yii::$app->db;
+                    $command = $connection->createCommand("SELECT `fund_num`,WEEK(`date`) as `week`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND YEAR(`date`) = 2016 AND WEEK(`date`)=".$v." GROUP BY fund_num,`week` ORDER BY rate DESC LIMIT 100");
+                    $posts =array_merge($posts,ArrayHelper::getColumn($command->queryAll(),'fund_num'));
+                }
+                $count =  array_count_values ($posts);
+                foreach($count as $key=>$v){
+                    if($v !== count($w)){
+                        unset($count[$key]);
+                    }
+                }
+                return array_keys($count);
+            }
+        }
+        return '';
+    }
+
+
 
     /**
      * 取得上个周一
