@@ -53,6 +53,7 @@ AppAsset::register($this);
     }
     $menuItems[] = ['label' => '指定日期删选', 'url' => ['/fund/sort']];
     $menuItems[] = ['label' => '周筛选', 'url' => ['/fund/week-filter']];
+    $menuItems[] = ['label' => '月排名', 'url' => ['/fund/month-sort']];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

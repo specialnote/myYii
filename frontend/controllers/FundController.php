@@ -241,4 +241,39 @@ class FundController extends BaseController
 
         return date('Y-m-d',strtotime('-1 week last monday'));
     }
+
+    ######################################################################################################################################################
+    ######################################################################################################################################################
+    /**
+     * 获取制定月份排名
+     * @param int $year
+     * @param int $month
+     */
+    public function actionMonthSort($year=2015,$month=8){
+        $connection = \Yii::$app->db;
+        $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE   YEAR(`date`) =".$year."  AND MONTH(`date`)=".$month." GROUP BY fund_num ORDER BY rate DESC limit 20";
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryAll();
+        return $this->render('month-sort',[
+            'posts'=>$posts,
+            'year'=>$year,
+            'month'=>$month,
+            'sql'=>$sql
+        ]);
+    }
+
+    ######################################################################################################################################################
+    ######################################################################################################################################################
+    /**
+     * 2906.36
+     * 计算所有基金每周增长率大于零的周数
+     * 不建议使用，sql太复杂，基金成立时间不一样
+     */
+    public function actionWeekCount(){
+        $connection = \Yii::$app->db;
+        $sql = "SELECT fund_num,COUNT(*) AS `count` FROM (SELECT fund_num,WEEK(`date`) AS `week`,SUM(rate+0) AS rate FROM fund_history GROUP BY fund_num,`week` HAVING rate > 0) table_a GROUP BY fund_num";
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryAll();
+        var_dump($posts);
+    }
 }
