@@ -127,7 +127,8 @@ class FundController extends BaseController
             }
         }else{
             return $this->render('sort',[
-                'datas'=>[]
+                'datas'=>[],
+                'type'=>$type
             ]);
         }
     }

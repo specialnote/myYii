@@ -162,11 +162,14 @@ class FundController extends Controller{
             $result = trim($result,')');
             $data_area = json_decode($result,true);
             foreach($data_area['data']['data'] as $key=>$v) {
-                $model =new FundNum([
-                    'fund_num'=> $v['code'],
-                    'fund_type'=>$type
-                ]);
-                $model->save();
+                $model = FundNum::find()->where(['fund_num'=>$v['code'],'fund_type'=>$type])->one();
+                if(!$model){
+                    $model =new FundNum([
+                        'fund_num'=> $v['code'],
+                        'fund_type'=>$type
+                    ]);
+                    $model->save();
+                }
             }
         }
     }
