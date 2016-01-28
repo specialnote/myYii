@@ -3,6 +3,7 @@ namespace console\controllers;
 
 use common\models\Fund;
 use common\models\FundData;
+use common\models\FundFilter;
 use common\models\FundHistory;
 use common\models\FundLog;
 use common\models\FundNum;
@@ -247,5 +248,20 @@ class FundController extends Controller{
         }
     }
 
+    public function actionFundFilter(){
+        //执行类型1:基金总体盈利
+        //FundFilter::saveType1();
 
+        //执行类型2:基金半年盈利
+        //FundFilter::saveType2();
+
+        //执行类型3:基金成立超过半年
+        //FundFilter::saveType3();
+
+        //执行类型4:最大涨幅大于最大跌幅
+        //FundFilter::saveType4();
+
+        //执行类型5:涨幅超过5%的天数大于跌幅超过5%的天数
+        FundFilter::saveType5();
+    }
 }

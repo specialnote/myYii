@@ -108,17 +108,22 @@ class FundController extends BaseController
      * @param string $type
      * @return array|string
      */
-    public function actionSort ($type = FundNum::TYPE_ZQ){
+    public function actionSort ($type = ''){
         if(\Yii::$app->request->isPost){
             $start = Html::encode(\Yii::$app->request->post('start'));
             $end = Html::encode(\Yii::$app->request->post('end'));
             if($start && $end){
                 \Yii::$app->response->format = Response::FORMAT_JSON;
                 $connection = \Yii::$app->db;
-                $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>$type])->asArray()->all();
-                $nums = ArrayHelper::getColumn($nums,'fund_num');
-                $nums = '(\''.implode('\',\'',$nums).'\')';
-                $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 100";
+                if($type){
+                    $nums = FundNum::find()->select('fund_num')->distinct()->where(['fund_type'=>$type])->asArray()->all();
+                    $nums = ArrayHelper::getColumn($nums,'fund_num');
+                    $nums = '(\''.implode('\',\'',$nums).'\')';
+                    $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE fund_num IN ".$nums." AND  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 100";
+                }else{
+                    $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE  ( UNIX_TIMESTAMP(`date`) BETWEEN UNIX_TIMESTAMP('".$start."') AND UNIX_TIMESTAMP('".$end."')) GROUP BY fund_num ORDER BY rate DESC LIMIT 100";
+                }
+
                 $command = $connection->createCommand($sql);
                 $posts = $command->queryAll();
                 return ['sql'=>$sql,'data'=>$posts];
@@ -265,7 +270,6 @@ class FundController extends BaseController
     ######################################################################################################################################################
     ######################################################################################################################################################
     /**
-     * 2906.36
      * 计算所有基金每周增长率大于零的周数
      * 不建议使用，sql太复杂，基金成立时间不一样
      */

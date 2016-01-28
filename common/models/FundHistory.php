@@ -59,4 +59,32 @@ class FundHistory extends \yii\db\ActiveRecord
             TimestampBehavior::className(),
         ];
     }
+
+    /**
+     * 获取制定基金超过某个涨幅的累计天数
+     * @param $num
+     * @param $r
+     * @return bool|null|string
+     */
+    public static function biggerCount($num,$r){
+        $sql = "SELECT COUNT(*) AS c FROM fund_history WHERE fund_num='".$num."' AND rate>".$r;
+        $connection = \Yii::$app->db;
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryScalar();
+        return $posts;
+    }
+
+    /**
+     * 获取制定基金低于某个涨幅的累计天数
+     * @param $num
+     * @param $r
+     * @return bool|null|string
+     */
+    public static function smallerCount($num,$r){
+        $sql = "SELECT COUNT(*) AS c FROM fund_history WHERE fund_num='".$num."' AND rate<".$r;
+        $connection = \Yii::$app->db;
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryScalar();
+        return $posts;
+    }
 }
