@@ -87,4 +87,30 @@ class FundHistory extends \yii\db\ActiveRecord
         $posts = $command->queryScalar();
         return $posts;
     }
+
+    /**
+     * 统计周数
+     * @param $num
+     * @return bool|null|string
+     */
+    public static function getWeeks($num){
+        $sql = "SELECT COUNT(*) FROM (SELECT fund_num,SUM(rate+0) AS r FROM fund_history WHERE fund_num='".$num."' GROUP BY YEAR(`date`),WEEK(`date`)) t";
+        $connection = \Yii::$app->db;
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryScalar();
+        return $posts;
+    }
+
+    /**
+     * 统计增长的周数
+     * @param $num
+     * @return bool|null|string
+     */
+    public static function getIncreaseWeeks($num){
+        $sql = "SELECT COUNT(*) FROM (SELECT fund_num,SUM(rate+0) AS r FROM fund_history WHERE fund_num='".$num."' GROUP BY YEAR(`date`),WEEK(`date`) HAVING r>0) t";
+        $connection = \Yii::$app->db;
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryScalar();
+        return $posts;
+    }
 }
