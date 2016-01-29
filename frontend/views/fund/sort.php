@@ -64,7 +64,7 @@ STR
         }
     }
     function duplicate(num){
-        $.post("<?= Url::to(['/fund/duplicate']) ?>",{'num':num},function(data){
+        $.post(fund_duplicate,{'num':num},function(data){
             if(data.code){
                 console.log(data.msg);
                 var html = '<ul>';

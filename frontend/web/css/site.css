@@ -96,3 +96,10 @@ a.desc:after {
 .fr{
     float: right;
 }
+
+/* 根据条件采集基金 */
+#fund-filter-num td,#fund-filter-form td{
+    margin-right: 10px;
+    float: left;
+}
+#month-detail-filter,#week-detail-filter,#day-detail-filter{display: none;}

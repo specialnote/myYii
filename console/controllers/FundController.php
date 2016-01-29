@@ -263,10 +263,10 @@ class FundController extends Controller{
         //执行类型4:最大涨幅大于最大跌幅
         FundFilter::saveType4();
 
-        //执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的1.5倍
+        //执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的2倍
         FundFilter::saveType5();
 
-        //执行类型6:增长天数是下跌天数两倍
+        //执行类型6:增长天数是下跌天数5倍
         FundFilter::saveType6();
 
         //执行类型7:80%周数在上涨

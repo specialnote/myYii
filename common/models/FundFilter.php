@@ -22,8 +22,8 @@ class FundFilter extends \yii\db\ActiveRecord
     const TYPE_2 = 20;//基金半年盈利
     const TYPE_3 = 30;//基金成立超过半年
     const TYPE_4 = 40;//最大涨幅大于最大跌幅
-    const TYPE_5 = 50;//涨幅超过5%的天数是跌幅超过5%的天数的1.5倍
-    const TYPE_6 = 70;//增长天数是下跌天数两倍
+    const TYPE_5 = 50;//涨幅超过5%的天数是跌幅超过5%的天数的2倍
+    const TYPE_6 = 70;//增长天数是下跌天数5倍
     const TYPE_7 = 90;//80%周数在上涨
 
     /**
@@ -47,7 +47,7 @@ class FundFilter extends \yii\db\ActiveRecord
         }
     }
     /**
-     * 执行类型6:增长天数是下跌天数两倍
+     * 执行类型6:增长天数是下跌天数5倍
      */
     public static function saveType6(){
         $model = new self();
@@ -56,7 +56,7 @@ class FundFilter extends \yii\db\ActiveRecord
         foreach($fund_nums as $v){
             $biggerCount = FundHistory::biggerCount($v->fund_num,0);
             $smallerCount = FundHistory::smallerCount($v->fund_num,0);
-            if($biggerCount>=$smallerCount*2){
+            if($biggerCount>=$smallerCount*5){
                 $model = new self([
                     'type'=>self::TYPE_6,
                     'date'=>date('Y-m-d'),
@@ -68,7 +68,7 @@ class FundFilter extends \yii\db\ActiveRecord
     }
 
     /**
-     * 执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的1.5倍
+     * 执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的2倍
      */
     public static function saveType5(){
         $model = new self();
@@ -77,7 +77,7 @@ class FundFilter extends \yii\db\ActiveRecord
         foreach($fund_nums as $v){
             $biggerCount = FundHistory::biggerCount($v->fund_num,5);
             $smallerCount = FundHistory::smallerCount($v->fund_num,-5);
-            if($biggerCount>=$smallerCount*1.5){
+            if($biggerCount>=$smallerCount*2){
                 $model = new self([
                     'type'=>self::TYPE_5,
                     'date'=>date('Y-m-d'),
@@ -156,9 +156,9 @@ class FundFilter extends \yii\db\ActiveRecord
             self::TYPE_2=>'基金半年盈利',
             self::TYPE_3=>'基金成立超过半年',
             self::TYPE_4=>'最大涨幅大于最大跌幅',
-            self::TYPE_5=>'涨幅超过5%的天数是跌幅超过5%的天数的1.5倍',
-            self::TYPE_6=>'增长天数是下跌天数两倍',
             self::TYPE_7=>'80%周数在上涨',
+            self::TYPE_5=>'涨幅超过5%的天数是跌幅超过5%的天数的5倍',
+            self::TYPE_6=>'增长天数是下跌天数3倍',
         ];
     }
 
@@ -173,8 +173,8 @@ class FundFilter extends \yii\db\ActiveRecord
             case self::TYPE_2:$name = '基金半年盈利';break;
             case self::TYPE_3:$name = '基金成立超过半年';break;
             case self::TYPE_4:$name = '最大涨幅大于最大跌幅';break;
-            case self::TYPE_5:$name = '涨幅超过5%的天数是跌幅超过5%的天数的1.5倍';break;
-            case self::TYPE_6:$name = '增长天数是下跌天数两倍';break;
+            case self::TYPE_5:$name = '涨幅超过5%的天数是跌幅超过5%的天数的2倍';break;
+            case self::TYPE_6:$name = '增长天数是下跌天数5倍';break;
             case self::TYPE_7:$name = '80%周数在上涨';break;
             default:$name = '';
         }

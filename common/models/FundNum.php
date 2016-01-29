@@ -21,6 +21,7 @@ class FundNum extends \yii\db\ActiveRecord
     const TYPE_ZS = 'zsx';//指数
     const TYPE_HH = 'hhx';//混合
     const TYPE_BB = 'bbx';//保本
+
     /**
      * @inheritdoc
      */
@@ -64,6 +65,11 @@ class FundNum extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * 处理基金增长率
+     * @param $rate
+     * @return string
+     */
     public static function getRate($rate){
         $rate = number_format($rate,2);
         if($rate >5){
@@ -76,4 +82,25 @@ class FundNum extends \yii\db\ActiveRecord
             return '<span style="color: green;font-size: 16px;font-weight: 700;">'.$rate.'</span>';
         }
     }
+
+    /**
+     * 获取制定基金类型名称
+     * @param $num
+     * @return string
+     */
+    public static function getTypeName($num){
+        $fund = FundNum::find()->where(['fund_num'=>$num])->one();
+        if(!$fund)return '';
+        $type = $fund->fund_type;
+        switch($type){
+            case self::TYPE_ZQ:$name = '债券';break;
+            case self::TYPE_GG:$name = '股票';break;
+            case self::TYPE_ZS:$name = '指数';break;
+            case self::TYPE_HH:$name = '混合';break;
+            case self::TYPE_BB:$name = '保本';break;
+            default:$name = '';
+        }
+        return $name;
+    }
+
 }
