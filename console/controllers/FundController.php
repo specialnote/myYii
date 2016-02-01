@@ -251,6 +251,7 @@ class FundController extends Controller{
     public function actionFundFilter(){
         @set_time_limit(0);
         @ini_set('memory_limit','180M');
+        
         //执行类型1:基金总体盈利
         FundFilter::saveType1();
 
