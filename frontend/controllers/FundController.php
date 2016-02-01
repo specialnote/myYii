@@ -188,7 +188,7 @@ class FundController extends BaseController
      */
     public function actionMonthSort($year=2015,$month=8){
         $connection = Yii::$app->db;
-        $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE   YEAR(`date`) =".$year."  AND MONTH(`date`)=".$month." GROUP BY fund_num ORDER BY rate DESC limit 20";
+        $sql = "SELECT `fund_num`,sum(rate+0) as rate FROM fund_history WHERE   YEAR(`date`) =".$year."  AND MONTH(`date`)=".$month." GROUP BY fund_num ORDER BY rate DESC limit 100";
         $command = $connection->createCommand($sql);
         $posts = $command->queryAll();
         return $this->render('month-sort',[

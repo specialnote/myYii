@@ -23,15 +23,40 @@ class FundFilter extends \yii\db\ActiveRecord
     const TYPE_3 = 30;//基金成立超过半年
     const TYPE_4 = 40;//最大涨幅大于最大跌幅
     const TYPE_5 = 50;//涨幅超过5%的天数是跌幅超过5%的天数的2倍
-    const TYPE_6 = 70;//增长天数是下跌天数5倍
-    const TYPE_7 = 90;//80%周数在上涨
+    const TYPE_6 = 60;//增长天数是下跌天数5倍
+    const TYPE_7 = 70;//80%周数在上涨
 
+    const TYPE_8 = 80;//2015年1月到6月每月涨幅排名都在前100的基金
+    const TYPE_9 = 90;//2015年9月到12月每月涨幅排名都在前100的基金
+
+
+    //执行类型9:2015年9月到12月每月涨幅排名都在前100的基金
+    public static function saveType9(){
+        $num_1 = self::getMonthSort(2015,9,100);
+        $num_2 = self::getMonthSort(2015,10,100);
+        $num_3 = self::getMonthSort(2015,11,100);
+        $num_4 = self::getMonthSort(2015,12,100);
+
+        $num = array_intersect($num_1,$num_2,$num_3,$num_4);
+        FundFilter::saveFilter(self::TYPE_9,$num);
+    }
+
+    //执行类型8:2015年1月到6月每月涨幅排名都在前100的基金
+    public static function saveType8(){
+        $num_1 = self::getMonthSort(2015,1,100);
+        $num_2 = self::getMonthSort(2015,2,100);
+        $num_3 = self::getMonthSort(2015,3,100);
+        $num_4 = self::getMonthSort(2015,4,100);
+        $num_5 = self::getMonthSort(2015,5,100);
+        $num_6 = self::getMonthSort(2015,6,100);
+
+        $num = array_intersect($num_1,$num_2,$num_3,$num_4,$num_5,$num_6);
+        FundFilter::saveFilter(self::TYPE_8,$num);
+    }
     /**
      * 执行类型7:80%周数在上涨
      */
     public static function saveType7(){
-        $model = new self();
-        $model->deleteAll(['type'=>self::TYPE_7]);
         $fund_nums = FundNum::find()->all();
         foreach($fund_nums as $v){
             $weekCount = FundHistory::getWeeks($v->fund_num);
@@ -50,8 +75,6 @@ class FundFilter extends \yii\db\ActiveRecord
      * 执行类型6:增长天数是下跌天数5倍
      */
     public static function saveType6(){
-        $model = new self();
-        $model->deleteAll(['type'=>self::TYPE_6]);
         $fund_nums = FundNum::find()->all();
         foreach($fund_nums as $v){
             $biggerCount = FundHistory::biggerCount($v->fund_num,0);
@@ -71,8 +94,6 @@ class FundFilter extends \yii\db\ActiveRecord
      * 执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的2倍
      */
     public static function saveType5(){
-        $model = new self();
-        $model->deleteAll(['type'=>self::TYPE_5]);
         $fund_nums = FundNum::find()->all();
         foreach($fund_nums as $v){
             $biggerCount = FundHistory::biggerCount($v->fund_num,5);
@@ -133,9 +154,8 @@ class FundFilter extends \yii\db\ActiveRecord
         FundFilter::saveFilter(self::TYPE_1,$nums);
     }
 
+    //将若干制定基金保存到基金过滤表
     public static function saveFilter($type,$nums){
-        $model = new self();
-        $model->deleteAll(['type'=>$type]);
         foreach($nums as $num){
             $model = new self([
                 'type'=>$type,
@@ -145,7 +165,15 @@ class FundFilter extends \yii\db\ActiveRecord
             $model->save();
         }
     }
-
+    //获取制定月份增长排名
+    public static function getMonthSort($year,$month,$limit){
+        $connection = \Yii::$app->db;
+        $sql = "SELECT fund_num,SUM(rate+0) AS r FROM fund_history WHERE YEAR(`date`)= ".$year." AND MONTH(`date`)= ".$month." GROUP BY fund_num ORDER BY r DESC LIMIT ".$limit;
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryAll();
+        $num = ArrayHelper::getColumn($posts,'fund_num');
+        return $num;
+    }
     /**
      * 获取所有类型
      * @return array
@@ -159,6 +187,8 @@ class FundFilter extends \yii\db\ActiveRecord
             self::TYPE_7=>'80%周数在上涨',
             self::TYPE_5=>'涨幅超过5%的天数是跌幅超过5%的天数的5倍',
             self::TYPE_6=>'增长天数是下跌天数3倍',
+            self::TYPE_8=>'2015年1月到6月每月涨幅排名都在前100的基金',
+            self::TYPE_9=>'2015年9月到12月每月涨幅排名都在前100的基金',
         ];
     }
 
@@ -176,6 +206,8 @@ class FundFilter extends \yii\db\ActiveRecord
             case self::TYPE_5:$name = '涨幅超过5%的天数是跌幅超过5%的天数的2倍';break;
             case self::TYPE_6:$name = '增长天数是下跌天数5倍';break;
             case self::TYPE_7:$name = '80%周数在上涨';break;
+            case self::TYPE_8:$name = '2015年1月到6月每月涨幅排名都在前100的基金';break;
+            case self::TYPE_9:$name = '2015年9月到12月每月涨幅排名都在前100的基金';break;
             default:$name = '';
         }
         return $name;

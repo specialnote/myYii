@@ -32,7 +32,7 @@ class FundController extends Controller{
     //采集爱基金上个交易日数据
     public function actionData(){
         @set_time_limit(0);
-        @ini_set('memory_limit','180M');
+        @ini_set('memory_limit','1280M');
         $client = new Client();
         foreach($this->url as $type=>$u){
             $crawler = $client->request('GET', $u);
@@ -153,7 +153,7 @@ class FundController extends Controller{
     //将所有基金编码保存
     public function actionNum(){
         @set_time_limit(0);
-        @ini_set('memory_limit','180M');
+        @ini_set('memory_limit','1280M');
         $client = new Client();
         foreach($this->url as $type=>$u){
             $crawler = $client->request('GET', $u);
@@ -248,10 +248,22 @@ class FundController extends Controller{
         }
     }
 
+    /**
+     * 过滤基金
+     */
     public function actionFundFilter(){
         @set_time_limit(0);
-        @ini_set('memory_limit','180M');
-        
+        @ini_set('memory_limit','1280M');
+        //清空数据表
+          try{
+              $connection = \Yii::$app->db;
+              $command = $connection->createCommand('TRUNCATE TABLE fund_filter');
+              $post = $command->execute();
+              var_dump($post);
+          }catch(\Exception $e){
+              echo $e->getMessage().PHP_EOL;
+          }
+
         //执行类型1:基金总体盈利
         FundFilter::saveType1();
 
@@ -272,5 +284,12 @@ class FundController extends Controller{
 
         //执行类型7:80%周数在上涨
         FundFilter::saveType7();
+
+        //执行类型8:2015年1月到6月每月涨幅排名都在前100的基金
+        FundFilter::saveType8();
+
+        //执行类型9:2015年9月到12月每月涨幅排名都在前100的基金
+        FundFilter::saveType9();
+
     }
 }
