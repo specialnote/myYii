@@ -1,5 +1,5 @@
 <?php
-
+$this->title = $num;
 ?>
 <style>
     tr,td,th{height: 20px!important;margin: 0px!important;padding: 0px!important;}
@@ -13,7 +13,9 @@
                     月涨幅记录--编号：<?= $num ?>；
                     类型：<?= \common\models\FundNum::getTypeName($num) ?>；
                     均值：<?= number_format($average,2) ?>；
-                    标准差：<?= number_format($sd,2) ?>
+                    标准差：<?= number_format($sd,2) ?>；
+                    比例：<?= number_format($sd/$average,2) ?>；
+                    总计：<?= number_format($sum,2) ?>
                 </td>
             </tr>
             <tr>

@@ -286,10 +286,10 @@ class FundController extends Controller{
         FundFilter::saveType7();
 
         //执行类型8:2015年1月到6月每月涨幅排名都在前100的基金
-        FundFilter::saveType8();
+        //FundFilter::saveType8();
 
         //执行类型9:2015年9月到12月每月涨幅排名都在前100的基金
-        FundFilter::saveType9();
+        //FundFilter::saveType9();
 
     }
 }

@@ -63,7 +63,8 @@ class FundController extends BaseController
             'datas'=>$posts,
             'num'=>$num,
             'average'=>$average,
-            'sd'=>$sd
+            'sd'=>$sd,
+            'sum'=>array_sum($rate_data)
         ]);
     }
 
@@ -196,6 +197,17 @@ class FundController extends BaseController
             'year'=>$year,
             'month'=>$month,
             'sql'=>$sql
+        ]);
+    }
+
+    public function actionYearSort($year=2015){
+        $connection = Yii::$app->db;
+        $sql = "SELECT `fund_num`,sum(rate+0) as r FROM fund_history WHERE   YEAR(`date`) =".$year."  GROUP BY fund_num ORDER BY r DESC limit 100";
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryAll();
+        return $this->render('year-sort',[
+            'posts'=>$posts,
+            'year'=>$year,
         ]);
     }
 

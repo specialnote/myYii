@@ -3,6 +3,7 @@
     use yii\helpers\Url;
     use yii\helpers\Html;
     \frontend\assets\HighStockAsset::register($this);
+$this->title = $num;
 ?>
 <style>
     tr,td,th{height: 20px!important;margin: 0px!important;padding: 0px!important;}
@@ -23,10 +24,11 @@
             <thead>
             <tr>
                 <td colspan="2" style="text-align: center;font-weight: 700;">
-                    周涨幅记录--编号：<?= $num ?>；
+                    日涨幅记录--编号：<?= $num ?>；
                     类型：<?= \common\models\FundNum::getTypeName($num) ?>；
                     均值：<?= number_format($average,2) ?>；
-                    标准差：<?= number_format($sd,2) ?>
+                    标准差：<?= number_format($sd,2) ?>；
+                    比例：<?= number_format($sd/$average,2) ?>
                 </td>
             </tr>
             <tr>
