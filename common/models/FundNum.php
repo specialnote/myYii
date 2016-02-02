@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%fund_num}}".
@@ -101,6 +102,44 @@ class FundNum extends \yii\db\ActiveRecord
             default:$name = '';
         }
         return $name;
+    }
+
+    /**
+     * 获取每日分析
+     * @param $num
+     * @return array
+     */
+    public static function getFundDetail($num,$type){
+        if(!in_array($type,['day','week','month']))return '';
+        $connection = Yii::$app->db;
+        if($type == 'day'){
+            $sql = "SELECT `date`,(rate+0) as sum_rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` DESC";
+        }elseif($type == 'week'){
+            $sql = "SELECT YEAR(`date`) as `year`,MONTH(`date`) as `month`,WEEK(`date`) as `week`,SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '".$num."' GROUP BY YEAR(`date`),MONTH(`date`),WEEK(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC,WEEK(`date`) DESC ";
+        }elseif($type == 'month'){
+            $sql = "SELECT YEAR(`date`) as `year`,MONTH(`date`) as `month`,SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '".$num."' GROUP BY YEAR(`date`),MONTH(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC";
+        }else{
+            return '';
+        }
+        $command = $connection->createCommand($sql);
+        $posts = $command->queryAll();
+        $rate_data = ArrayHelper::getColumn($posts,'sum_rate');
+        $sd = 0;
+        if($rate_data){
+            $average = array_sum($rate_data)/count($rate_data);
+            $n = 0;
+            foreach($rate_data as $v){
+                $n += ($v - $average)*($v - $average);
+            }
+            $sd = sqrt($n/count($rate_data));
+        }else{
+            $average = 0;
+        }
+        return [
+            'average'=>$average,//均值
+            'sd'=>$sd,//标准差,
+            'sum'=>array_sum($rate_data)
+        ];
     }
 
 }
