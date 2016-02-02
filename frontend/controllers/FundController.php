@@ -155,7 +155,7 @@ class FundController extends BaseController
 
                 $command = $connection->createCommand($sql);
                 $posts = $command->queryAll();
-                return ['sql'=>$sql,'data'=>$posts];
+                return $posts;
             }else{
                 return '';
             }

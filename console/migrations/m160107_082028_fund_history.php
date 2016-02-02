@@ -13,9 +13,9 @@ class m160107_082028_fund_history extends Migration
         }
         $this->createTable('{{%fund_history}}', [
             'id' => $this->primaryKey(),
-            'fund_num'=>$this->string(50),
-            'date'=>$this->string(50),//日期
-            'rate'=>$this->string(50),//增长率
+            'fund_num'=>$this->string(8),
+            'date'=>$this->string(20),//日期
+            'rate'=>$this->string(10),//增长率
             'created_at' => $this->integer(10)->notNull(),
             'updated_at' => $this->integer(10)->notNull(),
         ], $tableOptions);

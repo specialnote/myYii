@@ -13,7 +13,7 @@ class m151120_031451_fund_analyze extends Migration
         }
         $this->createTable('{{%fund_analyze}}', [
             'id' => $this->primaryKey(),
-            'fund_num'=>$this->string(50),
+            'fund_num'=>$this->string(8),
             'week' => $this->string(10),//第几周
             'week_average_iopv' => $this->string(10),//周平均净值
             'week_average_growth' => $this->string(10),//周平均增长值

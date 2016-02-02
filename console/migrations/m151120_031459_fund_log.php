@@ -13,7 +13,7 @@ class m151120_031459_fund_log extends Migration
         }
         $this->createTable('{{%fund_log}}', [
             'id' => $this->primaryKey(),
-            'fund_num'=>$this->string(50),
+            'fund_num'=>$this->string(8),
             'date' => $this->string(10),
             'item' => $this->string(10),//记录项目
             'created_at' => $this->integer(10)->notNull(),

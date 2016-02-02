@@ -14,7 +14,7 @@ class m151117_110925_fund extends Migration
         $this->createTable('{{%fund}}', [
             'id' => $this->primaryKey(),
             'name'=>$this->string(50),
-            'num' => $this->string(50),
+            'num' => $this->string(8),
             'company' => $this->string(50),
             'type' => $this->string(10),
             'date' => $this->string(10),

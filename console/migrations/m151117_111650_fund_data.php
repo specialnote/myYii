@@ -13,8 +13,8 @@ class m151117_111650_fund_data extends Migration
         }
         $this->createTable('{{%fund_data}}', [
             'id' => $this->primaryKey(),
-            'fund_num'=>$this->string(50),
-            'fund_type'=>$this->string(50),//类型
+            'fund_num'=>$this->string(8),
+            'fund_type'=>$this->string(10),//类型
             'date' => $this->string(10),
             'day_sort' => $this->string(10),//当天排名
             'week' => $this->string(10),//一年第几周

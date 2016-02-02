@@ -14,11 +14,10 @@
                 data:form.serialize(),
                 dataType:'json',
                 success:function(data){
-                   // $('#sql').html(data.sql);
                     var html = '';
                     var _fund = '<tr>';
                     var num = '';
-                    $.each(data.data,function(i,item){
+                    $.each(data,function(i,item){
                         html +='<tr><td>'+item.fund_num+'</td><td>'+format(item.rate)+'</td></tr>';
                         _fund += '<td>'+item.fund_num+'</td>';
                        num +=item.fund_num+'_';
@@ -66,10 +65,9 @@ STR
     function duplicate(num){
         $.post(fund_duplicate,{'num':num},function(data){
             if(data.code){
-                console.log(data.msg);
                 var html = '<ul>';
                 $.each(data.msg,function(i,item){
-                    html +='<li><a href="/fund/day-detail?num='+item+'" target="_blank">日详情：'+item+'</a> --- <a href="/fund/week-detail?num='+item+'" target="_blank">周详情：'+item+'</a> --- <a href="/fund/month-detail?num='+item+'" target="_blank">月详情：'+item+'</a></li>';
+                    html +='<li><a href="/fund/day-detail?num='+ $.trim(item)+'" target="_blank">日详情：'+$.trim(item)+'</a> --- <a href="/fund/week-detail?num='+$.trim(item)+'" target="_blank">周详情：'+$.trim(item)+'</a> --- <a href="/fund/month-detail?num='+$.trim(item)+'" target="_blank">月详情：'+$.trim(item)+'</a></li>';
                 });
                 html+='</ul>';
                 $('#has-duplicate-num').html(html);
