@@ -49,6 +49,50 @@ class FundController extends Controller{
     }
 
     /**
+     * 根据条件过滤基金
+     */
+    public function actionFundFilter(){
+        @set_time_limit(0);
+        @ini_set('memory_limit','1280M');
+        //清空数据表
+        try{
+            $connection = \Yii::$app->db;
+            $command = $connection->createCommand('TRUNCATE TABLE fund_filter');
+            $post = $command->execute();
+            var_dump($post);
+        }catch(\Exception $e){
+            echo $e->getMessage().PHP_EOL;
+        }
+
+        //执行类型1:基金总体盈利
+        FundFilter::saveType1();
+
+        //执行类型2:基金半年盈利
+        FundFilter::saveType2();
+
+        //执行类型3:基金成立超过半年
+        FundFilter::saveType3();
+
+        //执行类型4:最大涨幅大于最大跌幅
+        FundFilter::saveType4();
+
+        //执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的2倍
+        FundFilter::saveType5();
+
+        //执行类型6:增长天数是下跌天数5倍
+        FundFilter::saveType6();
+
+        //执行类型7:80%周数在上涨
+        FundFilter::saveType7();
+
+        //执行类型8:2015年1月到6月每月涨幅排名都在前100的基金
+        //FundFilter::saveType8();
+
+        //执行类型9:2015年9月到12月每月涨幅排名都在前100的基金
+        //FundFilter::saveType9();
+
+    }
+    /**
      * 每天采集基金数据
      */
     public function actionDayHistory(){
@@ -89,10 +133,7 @@ class FundController extends Controller{
     }
 
     /**
-     * 采集所有基金历史数据
-     */
-    /**
-      SELECT YEAR(`date`),MONTH(`date`),WEEK(`date`),SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '000291' GROUP BY YEAR(`date`),MONTH(`date`),WEEK(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC,WEEK(`date`) DESC ;
+     * 采集所有基金历史数据(一次性)
      */
     public function actionHistory($page =1){
         @set_time_limit(0);
@@ -150,7 +191,7 @@ class FundController extends Controller{
         }
     }
 
-    //将所有基金编码保存
+    //采集所有基金编码（一次性）
     public function actionNum(){
         @set_time_limit(0);
         @ini_set('memory_limit','1280M');
@@ -248,48 +289,4 @@ class FundController extends Controller{
         }
     }
 
-    /**
-     * 过滤基金
-     */
-    public function actionFundFilter(){
-        @set_time_limit(0);
-        @ini_set('memory_limit','1280M');
-        //清空数据表
-          try{
-              $connection = \Yii::$app->db;
-              $command = $connection->createCommand('TRUNCATE TABLE fund_filter');
-              $post = $command->execute();
-              var_dump($post);
-          }catch(\Exception $e){
-              echo $e->getMessage().PHP_EOL;
-          }
-
-        //执行类型1:基金总体盈利
-        FundFilter::saveType1();
-
-        //执行类型2:基金半年盈利
-        FundFilter::saveType2();
-
-        //执行类型3:基金成立超过半年
-        FundFilter::saveType3();
-
-        //执行类型4:最大涨幅大于最大跌幅
-        FundFilter::saveType4();
-
-        //执行类型5:涨幅超过5%的天数是跌幅超过5%的天数的2倍
-        FundFilter::saveType5();
-
-        //执行类型6:增长天数是下跌天数5倍
-        FundFilter::saveType6();
-
-        //执行类型7:80%周数在上涨
-        FundFilter::saveType7();
-
-        //执行类型8:2015年1月到6月每月涨幅排名都在前100的基金
-        //FundFilter::saveType8();
-
-        //执行类型9:2015年9月到12月每月涨幅排名都在前100的基金
-        //FundFilter::saveType9();
-
-    }
 }

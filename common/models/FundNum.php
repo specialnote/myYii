@@ -67,7 +67,7 @@ class FundNum extends \yii\db\ActiveRecord
     }
 
     /**
-     * 处理基金增长率
+     * 处理基金增长率(数值格式化，颜色)
      * @param $rate
      * @return string
      */
@@ -104,8 +104,9 @@ class FundNum extends \yii\db\ActiveRecord
         return $name;
     }
 
+
     /**
-     * 获取每日分析
+     * 获取基金不同周期分析结果（均差、标准差）
      * @param $num
      * @return array
      */
@@ -116,15 +117,13 @@ class FundNum extends \yii\db\ActiveRecord
             $sql = "SELECT `date`,(rate+0) as sum_rate FROM fund_history WHERE fund_num = '".$num."' ORDER BY `date` DESC";
         }elseif($type == 'week'){
             $sql = "SELECT YEAR(`date`) as `year`,MONTH(`date`) as `month`,WEEK(`date`) as `week`,SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '".$num."' GROUP BY YEAR(`date`),MONTH(`date`),WEEK(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC,WEEK(`date`) DESC ";
-        }elseif($type == 'month'){
-            $sql = "SELECT YEAR(`date`) as `year`,MONTH(`date`) as `month`,SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '".$num."' GROUP BY YEAR(`date`),MONTH(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC";
         }else{
-            return '';
+            $sql = "SELECT YEAR(`date`) as `year`,MONTH(`date`) as `month`,SUM((rate+0)) AS sum_rate FROM fund_history WHERE fund_num = '".$num."' GROUP BY YEAR(`date`),MONTH(`date`) ORDER BY YEAR(`date`) DESC,MONTH(`date`) DESC";
         }
         $command = $connection->createCommand($sql);
         $posts = $command->queryAll();
         $rate_data = ArrayHelper::getColumn($posts,'sum_rate');
-        $sd = 0;
+        $sd = $average = 0;
         if($rate_data){
             $average = array_sum($rate_data)/count($rate_data);
             $n = 0;
@@ -132,13 +131,10 @@ class FundNum extends \yii\db\ActiveRecord
                 $n += ($v - $average)*($v - $average);
             }
             $sd = sqrt($n/count($rate_data));
-        }else{
-            $average = 0;
         }
         return [
             'average'=>$average,//均值
             'sd'=>$sd,//标准差,
-            'sum'=>array_sum($rate_data)
         ];
     }
 
